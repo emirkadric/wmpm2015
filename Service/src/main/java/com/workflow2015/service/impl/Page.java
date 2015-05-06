@@ -1,4 +1,4 @@
-package impl;
+package com.workflow2015.service.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

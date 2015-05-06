@@ -1,5 +1,6 @@
-package impl;
+package com.workflow2015.common.test.impl;
 
+import com.workflow2015.service.impl.ServiceApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,6 @@ public class DepTest implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        this.serviceApplication.init();
+        this.serviceApplication.test();
     }
 }

@@ -1,5 +1,6 @@
-package impl;
+package com.workflow2015.service.impl;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -12,7 +13,7 @@ public class ServiceApplication {
     public ServiceApplication() {
     }
 
-    public void init() {
+    public void test() {
         RestTemplate restTemplate = new RestTemplate();
         Page page = restTemplate.getForObject("http://graph.facebook.com/pivotalsoftware", Page.class);
         System.out.println("Name:    " + page.getName());
