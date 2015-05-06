@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>group14</artifactId>
+        <groupId>com.workflow2015</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>com.workflow2015.service</artifactId>
+    <dependencies>
+<!--Spring framework i think, check which one we will need-->
+        <!-- RestClient for WL APi-->
+        <!-- Camel ActiveMQ for msg queue-->
+        <!-- add dependencies to other modules if you need it-->
+    </dependencies>
+
+</project>
