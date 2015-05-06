@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>group14</artifactId>
+        <artifactId>com.workflow2015</artifactId>
         <groupId>com.workflow2015</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -11,7 +11,16 @@
 
     <artifactId>com.workflow2015.service</artifactId>
     <dependencies>
-<!--Spring framework i think, check which one we will need-->
+        <!--Spring framework i think, check which one we will need-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
         <!-- RestClient for WL APi-->
         <!-- Camel ActiveMQ for msg queue-->
         <!-- add dependencies to other modules if you need it-->
