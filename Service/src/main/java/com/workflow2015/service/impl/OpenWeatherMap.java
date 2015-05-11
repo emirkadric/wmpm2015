@@ -7,17 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Created by Dominik Heigl on 5/6/15.
  */
 @org.springframework.stereotype.Component
-public class ServiceApplication {
+public class OpenWeatherMap implements Processor {
 
     private final CamelContext camelContext;
 
     @Autowired
-    public ServiceApplication(CamelContext camelContext) {
+    public OpenWeatherMap(CamelContext camelContext) {
         this.camelContext = camelContext;
     }
 
-
-    public void test() {
+    public void test(Object test) {
         try {
             ProducerTemplate template = this.camelContext.createProducerTemplate();
             this.camelContext.start();
@@ -46,5 +45,10 @@ public class ServiceApplication {
         System.out.println("About:   " + page.getAbout());
         System.out.println("Phone:   " + page.getPhone());
         System.out.println("Website: " + page.getWebsite());*/
+    }
+
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        System.out.println(exchange.getIn().getBody(String.class));
     }
 }

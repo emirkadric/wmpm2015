@@ -23,6 +23,6 @@ open a terminal, go to the root directory of the project:
 ## RUN
 
 ### command line
-> cd common/
+> cd bootstrap/
 
 > spring-boot:run
