@@ -11,11 +11,21 @@
 
     <artifactId>com.workflow2015.service</artifactId>
     <dependencies>
+        <dependency>
+            <artifactId>com.workflow2015.common</artifactId>
+            <groupId>com.workflow2015</groupId>
+            <version>${project.version}</version>
+        </dependency>
         <!--Spring framework i think, check which one we will need-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-rabbitmq</artifactId>
+            <version>${camel.version}</version>
         </dependency>
         <!--<dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
