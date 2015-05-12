@@ -5,6 +5,8 @@ import com.workflow2015.common.helper.RouteRequest;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuilder {
 
+    private static final Logger log = LoggerFactory.getLogger(ApplicationRouteBuilder.class);
+
+
     @Autowired
     private ProducerTemplate producerTemplate;
 
@@ -22,7 +27,7 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
         from("activemq:topic:routerequest.result").process(new Processor() {
             @Override
             public void process(Exchange exchange) throws Exception {
-                System.out.println("routerequest.result: "+exchange.getIn().getBody(String.class));
+                log.debug("routerequest.result: " + exchange.getIn().getBody(String.class));
             }
         });
 

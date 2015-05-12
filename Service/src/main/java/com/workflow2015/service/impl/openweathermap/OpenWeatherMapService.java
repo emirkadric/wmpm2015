@@ -43,7 +43,6 @@ public class OpenWeatherMapService implements Processor, IService<Object, String
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        System.out.println("TEST");
         String json = exchange.getIn().getBody(String.class);
         RouteRequest routeRequest = JsonHelper.gson.fromJson(json, RouteRequest.class);
         String data = this.getDataFromSource(routeRequest);
