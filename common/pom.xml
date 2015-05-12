@@ -17,11 +17,11 @@
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-rabbitmq</artifactId>
             <version>${camel.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-restlet</artifactId>
@@ -32,5 +32,6 @@
             <artifactId>gson</artifactId>
             <version>2.3.1</version>
         </dependency>
+
     </dependencies>
 </project>

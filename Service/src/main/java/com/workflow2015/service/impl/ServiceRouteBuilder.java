@@ -1,6 +1,6 @@
 package com.workflow2015.service.impl;
 
-import com.workflow2015.service.impl.openweathermap.OpenWeatherMap;
+import com.workflow2015.service.impl.openweathermap.OpenWeatherMapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
 
     @Autowired
-    private OpenWeatherMap openWeatherMap;
+    private OpenWeatherMapService openWeatherMapService;
 
     @Override
     public void configure() throws Exception {
-        from("rabbitmq://localhost/bptexchange?exchangeType=topic&queue=bptoutgoing&routingKey=openweathermap").
-                process(openWeatherMap);
+        from("activemq:topic:routerequest.openweathermap").
+                process(openWeatherMapService);
     }
 }

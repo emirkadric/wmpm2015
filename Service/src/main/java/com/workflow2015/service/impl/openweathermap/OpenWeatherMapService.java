@@ -4,17 +4,21 @@ import com.workflow2015.common.helper.JsonHelper;
 import com.workflow2015.common.helper.RouteRequest;
 import com.workflow2015.service.IService;
 import com.workflow2015.service.helper.openweathermap.OpenWeather;
-import org.apache.camel.*;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.apache.camel.ProducerTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Dominik Heigl on 5/6/15.
  */
 @org.springframework.stereotype.Component
-public class OpenWeatherMap implements Processor, IService<Object, String> {
+public class OpenWeatherMapService implements Processor, IService<Object, String> {
+
+    private static final Logger log = LoggerFactory.getLogger(OpenWeatherMapService.class);
 
     private final CamelContext camelContext;
     private final ProducerTemplate producerTemplate;
@@ -32,7 +36,7 @@ public class OpenWeatherMap implements Processor, IService<Object, String> {
     String url;*/
 
     @Autowired
-    public OpenWeatherMap(CamelContext camelContext, ProducerTemplate producerTemplate) {
+    public OpenWeatherMapService(CamelContext camelContext, ProducerTemplate producerTemplate) {
         this.camelContext = camelContext;
         this.producerTemplate = producerTemplate;
     }
@@ -62,15 +66,12 @@ public class OpenWeatherMap implements Processor, IService<Object, String> {
                     });
 
             if (null != exchange) {
-                Message out = exchange.getOut();
-                int responseCode = out.getHeader(Exchange.HTTP_RESPONSE_CODE, Integer.class);
-                System.out.println("Response: " + String.valueOf(responseCode));
                 json = exchange.getOut().getBody(String.class);
                 OpenWeather openWeather = JsonHelper.gson.fromJson(json, OpenWeather.class);
-                System.out.println(json);
+                log.debug(json);
             }
         } catch (Exception ex) {
-            System.out.println("Exception: " + ex);
+            log.error(ex.getMessage());
         }
         return json;
     }
@@ -82,10 +83,7 @@ public class OpenWeatherMap implements Processor, IService<Object, String> {
 
     @Override
     public Object pushDataToQueue(String data) {
-        Map<String, Object> header = new HashMap<>();
-        header.put("rabbitmq.ROUTING_KEY", "routerequestresult");
-
-        this.getProducerTemplate().sendBodyAndHeaders("rabbitmq://localhost/bptexchange?exchangeType=topic&queue=bptoutgoing", data, header);
+        this.getProducerTemplate().sendBody("activemq:topic:routerequest.result", data);
         return null;
     }
 }

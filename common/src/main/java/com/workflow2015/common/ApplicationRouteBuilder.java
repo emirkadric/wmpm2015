@@ -4,6 +4,8 @@ import com.workflow2015.common.helper.JsonHelper;
 import com.workflow2015.common.helper.RouteRequest;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.camel.ProducerTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,13 +14,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuilder {
 
+    @Autowired
+    private ProducerTemplate producerTemplate;
 
     @Override
     public void configure() throws Exception {
-        from("rabbitmq://localhost/bptexchange?exchangeType=topic&queue=bptincoming&routingKey=routerequestresult").process(new Processor() {
+        from("activemq:topic:routerequest.result").process(new Processor() {
             @Override
             public void process(Exchange exchange) throws Exception {
-                System.out.println(exchange.getIn().getBody(String.class));
+                System.out.println("routerequest.result: "+exchange.getIn().getBody(String.class));
             }
         });
 
@@ -27,11 +31,10 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
                 //TODO Unnecessary json parse?
                 String json = exchange.getIn().getBody(String.class);
                 RouteRequest routeRequest = JsonHelper.gson.fromJson(json, RouteRequest.class);
-                exchange.getOut().setBody(JsonHelper.gson.toJson(routeRequest, RouteRequest.class));
-                exchange.getOut().setHeader("rabbitmq.ROUTING_KEY", "openweathermap");
+                exchange.getOut().setBody(JsonHelper.gson.toJson(routeRequest, RouteRequest.class), String.class);
             }
         })//TODO add additional routes
-                .to("rabbitmq://localhost/bptexchange?exchangeType=topic&queue=bptoutgoing");
+                .to("activemq:topic:routerequest.openweathermap");
 
 
     }
