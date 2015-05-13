@@ -16,7 +16,6 @@
             <groupId>com.workflow2015</groupId>
             <version>${project.version}</version>
         </dependency>
-        <!--Spring framework i think, check which one we will need-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -24,20 +23,9 @@
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-rabbitmq</artifactId>
-            <version>${camel.version}</version>
-        </dependency>
-        <!--<dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>-->
-        <dependency>
-            <groupId>org.apache.camel</groupId>
             <artifactId>camel-http</artifactId>
             <version>${camel.version}</version>
         </dependency>
-        <!-- RestClient for WL APi-->
-        <!-- Camel ActiveMQ for msg queue-->
         <!-- add dependencies to other modules if you need it-->
     </dependencies>
 
