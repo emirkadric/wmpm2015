@@ -5,6 +5,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.twitter.TwitterComponent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ResourceBundle;
@@ -15,7 +16,10 @@ import java.util.ResourceBundle;
 @Component
 public class TwitterNotification implements Processor {
     private final CamelContext camelContext;
-    private final ResourceBundle resourceBundle = ResourceBundle.getBundle("twitterCreds.properties");
+    /*@Value("${a.token}") String token;
+    @Value("${a.tokenSecret}") String tokenSecret;
+    @Value("${c.key}") String consumerKey;
+    @Value("${c.secret}") String keySecret;*/
 
     @Autowired
     public TwitterNotification(CamelContext camelContext)
@@ -29,10 +33,10 @@ public class TwitterNotification implements Processor {
         System.out.println("Usli smo u twitter processor! ");
 
         TwitterComponent twitter = camelContext.getComponent("twitter", TwitterComponent.class);
-        twitter.setAccessToken(resourceBundle.getString("a.token"));
-        twitter.setAccessTokenSecret(resourceBundle.getString("a.tokenSecret"));
-        twitter.setConsumerKey(resourceBundle.getString("c.key"));
-        twitter.setConsumerSecret(resourceBundle.getString("c.secret"));
+        twitter.setAccessToken("75753355-pqX0uFbKLn8aGwSID6aT2WKXGUX5n9IPoCxtdrxgc");
+        twitter.setAccessTokenSecret("75753355-pqX0uFbKLn8aGwSID6aT2WKXGUX5n9IPoCxtdrxgc");
+        twitter.setConsumerKey("7C9B7x83kDHKeq1llCq6wzWYG");
+        twitter.setConsumerSecret("EbLyy6YHIkrm0OnW50MyXTLW3mqzJBsAYpYTPAcwdYTBq1pqSM");
 
         String tweet = "Hello/Hallo/Pozdrav WMPM 2015 IR1";
 
