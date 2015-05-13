@@ -21,6 +21,17 @@
             <artifactId>camel-mail</artifactId>
             <version>2.15.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.twitter4j</groupId>
+            <artifactId>twitter4j-core</artifactId>
+            <version>4.0.3</version>
+        </dependency>
+
 
     </dependencies>
 
