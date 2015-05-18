@@ -18,7 +18,7 @@ public class NotificationRouteBuilder extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        from("timer:tmr?period=5s")
+        from("timer:tmr?period=300s")
                 .routeId("twitterROUTEid").log("*************IDEMO NA MARS***************")
                 .process(twitterNotification)
                 .to(twitterEndpoint)

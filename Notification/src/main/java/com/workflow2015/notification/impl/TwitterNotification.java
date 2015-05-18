@@ -3,9 +3,10 @@ package com.workflow2015.notification.impl;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.camel.component.twitter.TwitterComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -14,10 +15,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class TwitterNotification implements Processor {
     private final CamelContext camelContext;
+    private static AtomicInteger counter = new AtomicInteger((int) (Math.random() * 100));
 
     @Autowired
-    public TwitterNotification(CamelContext camelContext)
-    {
+    public TwitterNotification(CamelContext camelContext) {
         this.camelContext = camelContext;
 
     }
@@ -26,7 +27,7 @@ public class TwitterNotification implements Processor {
     public void process(Exchange exchange) throws Exception {
         System.out.println("Usli smo u twitter processor! ");
 
-        String tweet = "Hello/Hallo/Pozdrav WMPM 2015 IR1";
+        String tweet = "Hello/Hallo/Pozdrav WMPM 2015 IR1 " + counter.getAndIncrement();
 
         exchange.getOut().setBody(tweet);
 
