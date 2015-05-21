@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Created by Dominik Heigl on 5/6/15.
  */
 @org.springframework.stereotype.Component
-public class OpenWeatherMapService implements Processor, IService<Object, String> {
+public class OpenWeatherMapService implements Processor, IService<OpenWeather, String> {
 
     private static final Logger log = LoggerFactory.getLogger(OpenWeatherMapService.class);
 
@@ -76,12 +76,12 @@ public class OpenWeatherMapService implements Processor, IService<Object, String
     }
 
     @Override
-    public Object validateDataFetched(String data) {
+    public OpenWeather validateDataFetched(String data) {
         return null;
     }
 
     @Override
-    public Object pushDataToQueue(String data) {
+    public OpenWeather pushDataToQueue(String data) {
         this.getProducerTemplate().sendBody("activemq:topic:routerequest.result", data);
         return null;
     }
