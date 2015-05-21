@@ -54,8 +54,8 @@ public class WienerLinienService implements Processor, IService<Object, String> 
                     });
 
             if (null != exchange) {
-//                xml = exchange.getOut().getBody(String.class);
-                xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>";
+                xml = exchange.getOut().getBody(String.class);
+//                xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>";
                 log.debug(xml);
             }
         } catch (Exception ex) {
