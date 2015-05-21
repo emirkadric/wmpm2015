@@ -27,6 +27,16 @@
             <version>${camel.version}</version>
         </dependency>
         <!-- add dependencies to other modules if you need it-->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-xmljson</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xom</groupId>
+            <artifactId>xom</artifactId>
+            <version>1.2.5</version>
+        </dependency>
     </dependencies>
 
 </project>
