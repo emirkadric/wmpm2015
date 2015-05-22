@@ -6,8 +6,8 @@ import com.google.gson.reflect.TypeToken;
 import com.workflow2015.common.helper.JsonHelper;
 import com.workflow2015.common.helper.RouteRequest;
 import com.workflow2015.service.IService;
-import com.workflow2015.service.helper.citybike.CityBikeStations;
 import com.workflow2015.service.helper.citybike.CityBikeStation;
+import com.workflow2015.service.helper.citybike.CityBikeStations;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -68,19 +68,20 @@ public class CityBikeService implements Processor, IService<Object, String> {
 
                 //todo dirty: make gson singleton
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
-                Type collectionType = new TypeToken<List<CityBikeStation>>(){}.getType();
+                Type collectionType = new TypeToken<List<CityBikeStation>>() {
+                }.getType();
                 CityBikeStations stations = new CityBikeStations(gson.fromJson(json, collectionType));
-                log.debug(String.format("loaded %s citybikes",stations.size()));
+                log.debug(String.format("loaded %s citybikes", stations.size()));
 
-                CityBikeStation nearestStation = stations.getClosestBikeStation(routeRequest.getFrom().getLongitude(),routeRequest.getFrom().getLatitude());
-                log.debug(String.format("closest citybike station: %s", nearestStation ==null ? nearestStation : "")) ;
+                CityBikeStation nearestStation = stations.getClosestBikeStation(routeRequest.getFrom().getLongitude(), routeRequest.getFrom().getLatitude());
+                log.debug(String.format("closest citybike station: %s", nearestStation != null ? nearestStation : ""));
             }
         } catch (Exception ex) {
             log.error(ex.getMessage());
             return ex.getMessage();
         }
 
-        return json.subSequence(0,json.length()%200).toString();//dont spam the debug log
+        return json.subSequence(0, json.length() % 200).toString();//dont spam the debug log
     }
 
     @Override
