@@ -32,7 +32,7 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
             }
         });
         from("restlet:http://localhost:" + 49081 + "/routerequest?restletMethod=post")
-                .unmarshal().json(JsonLibrary.Gson)
+                .unmarshal().json(JsonLibrary.Gson,RouteRequest.class)
                 .multicast()
                 .to("activemq:topic:routerequest.openweathermap",
                         "activemq:topic:routerequest.wienerlinien",

@@ -2,6 +2,7 @@
 
 import com.workflow2015.common.helper.Xml2JsonConfiguration;
 import com.workflow2015.service.aggregator.CityBikeStationAggregationStrategy;
+import com.workflow2015.service.helper.citybike.CityBikeStation;
 import com.workflow2015.service.helper.citybike.CityBikeStations;
 import com.workflow2015.service.impl.citybike.processor.CityBikeStationFilter;
 import com.workflow2015.service.impl.citybike.processor.CityBikeStationJsonParser;
@@ -44,12 +45,13 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                 .process(cityBikeStationFilter)
                 .to("activemq:topic:requestprocessing.citybike");
 
+
+
         from("activemq:topic:requestprocessing.citybike")
                 .process(new Processor() {
                     @Override
                     public void process(Exchange exchange) throws Exception {
-                        CityBikeStations stations = exchange.getIn().getBody(CityBikeStations.class);
-                        log.debug(stations.toString());
+                        CityBikeStation station = exchange.getIn().getBody(CityBikeStation.class);
                     }
                 });
 

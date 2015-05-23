@@ -1,5 +1,6 @@
 package com.workflow2015.service.helper.citybike;
 
+import java.io.Serializable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -7,7 +8,7 @@ import java.text.NumberFormat;
 /**
  * Created by kumar on 21/05/15.
  */
-public class LngLat implements Comparable<LngLat> {
+public class LngLat implements Comparable<LngLat>,Serializable {
 
     private Long lng;
     private Long lat;
