@@ -6,6 +6,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.apache.camel.processor.aggregate.GroupedExchangeAggregationStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,15 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
             }
         });
         from("restlet:http://localhost:" + 49081 + "/routerequest?restletMethod=post")
-                .unmarshal().json(JsonLibrary.Gson,RouteRequest.class)
-                .multicast()
+                .unmarshal().json(JsonLibrary.Gson, RouteRequest.class)
+                .multicast(new GroupedExchangeAggregationStrategy())
+                .parallelProcessing()
                 .to("activemq:topic:routerequest.openweathermap",
                         "activemq:topic:routerequest.wienerlinien",
-                        "activemq:topic:routerequest.citybike");
+                        "activemq:topic:routerequest.citybike")
+                .end()
+                .bean(DecisionMaker.class, "decide(${body})");
+
 
     }
 }

@@ -43,7 +43,7 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                 .enrich("restlet:http://api.citybik.es/citybike-wien.json", new CityBikeStationAggregationStrategy())
                 .process(cityBikeStationJsonParser)
                 .process(cityBikeStationFilter)
-                .to("activemq:topic:requestprocessing.citybike");
+                .end();
 
 
 
