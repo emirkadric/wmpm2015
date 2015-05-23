@@ -13,6 +13,7 @@ public class DecisionMaker {
 
     public String decide(List<Exchange> exchanges)
     {
+        //todo map exchange to services and make decision
         return exchanges.size()+"";
 
     }
