@@ -2,7 +2,6 @@ package com.workflow2015.service.impl.wienerlinien;
 
 import com.workflow2015.common.helper.JsonHelper;
 import com.workflow2015.common.helper.RouteRequest;
-import com.workflow2015.service.IService;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Component;
  * Created by Dominik Heigl on 5/21/15.
  */
 @Component
-public class WienerLinienService implements Processor, IService<Object, String> {
+public class WienerLinienService implements Processor {
     private static final Logger log = LoggerFactory.getLogger(WienerLinienService.class);
 
     private final CamelContext camelContext;
@@ -41,8 +40,7 @@ public class WienerLinienService implements Processor, IService<Object, String> 
     }
 
 
-    @Override
-    public String getDataFromSource(RouteRequest routeRequest) {
+   /* public String getDataFromSource(RouteRequest routeRequest) {
         String xml = null;
         try {
             //TODO dynamic URL
@@ -62,18 +60,7 @@ public class WienerLinienService implements Processor, IService<Object, String> 
             log.error(ex.getMessage());
         }
         return xml;
-    }
-
-    @Override
-    public Object validateDataFetched(String data) {
-        return null;
-    }
-
-    @Override
-    public Object pushDataToQueue(String data) {
-        this.getProducerTemplate().sendBody("activemq:topic:requestprocessing.wienerlinien", data);
-        return null;
-    }
+    }*/
 
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -83,8 +70,6 @@ public class WienerLinienService implements Processor, IService<Object, String> 
         if (header == null) {
             String json = exchange.getIn().getBody(String.class);
             RouteRequest routeRequest = JsonHelper.gson.fromJson(json, RouteRequest.class);
-            String data = this.getDataFromSource(routeRequest);
-            this.pushDataToQueue(data);
         } else if (header.equals("location")) {
             String json = exchange.getIn().getBody(String.class);
             log.debug(json);
