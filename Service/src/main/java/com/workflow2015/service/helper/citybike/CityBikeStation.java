@@ -4,10 +4,11 @@ import com.google.gson.annotations.Expose;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import javax.annotation.Generated;
+import java.io.Serializable;
 import java.util.Date;
 
 @Generated("org.jsonschema2pojo")
-public class CityBikeStation {
+public class CityBikeStation implements Serializable {
 
     @Expose
     private Integer bikes;

@@ -1,9 +1,11 @@
 package com.workflow2015.common.helper;
 
+import java.io.Serializable;
+
 /**
  * Created by Dominik Heigl on 5/11/15.
  */
-public class RouteRequest {
+public class RouteRequest implements Serializable{
     private Integer time;
     private Coordinate from;
     private Coordinate to;

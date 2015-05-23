@@ -32,6 +32,7 @@
             <artifactId>camel-xmljson</artifactId>
             <version>${camel.version}</version>
         </dependency>
+
         <dependency>
             <groupId>xom</groupId>
             <artifactId>xom</artifactId>

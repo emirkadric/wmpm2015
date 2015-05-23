@@ -1,9 +1,11 @@
 package com.workflow2015.common.helper;
 
+import java.io.Serializable;
+
 /**
  * Created by Dominik Heigl on 5/11/15.
  */
-public class Coordinate {
+public class Coordinate implements Serializable {
     private Double latitude;
     private Double longitude;
 
