@@ -1,5 +1,11 @@
 package com.workflow2015.service.impl;
 
+import com.google.maps.DirectionsApi;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.model.DirectionsRoute;
+import com.google.maps.model.GeocodingResult;
+import com.workflow2015.common.helper.RouteRequest;
 import com.workflow2015.common.helper.Xml2JsonConfiguration;
 import com.workflow2015.service.aggregator.CityBikeStationAggregationStrategy;
 import com.workflow2015.service.helper.citybike.CityBikeStation;
@@ -58,6 +64,20 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                         CityBikeStation station = exchange.getIn().getBody(CityBikeStation.class);
                     }
                 });
+
+        from("activemq:topic:routerequest.directions")
+                .process(new Processor() {
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        RouteRequest routeRequest = exchange.getIn().getBody(RouteRequest.class);
+
+                        GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyDqa7u_SLmSiEPL7dEVfaqicXCh7r6t-Ks");
+                        DirectionsRoute[] results =  DirectionsApi.getDirections(context, routeRequest.getFrom().toString(), routeRequest.getTo().toString()).await();
+                        log.debug(results.length>0 ? results[0].toString() : "no route found");
+                    }
+                })
+                .marshal().json(JsonLibrary.Gson)
+                .end();
 
         from("activemq:topic:routerequest.wienerlinien").
                 process(wienerLinienService)

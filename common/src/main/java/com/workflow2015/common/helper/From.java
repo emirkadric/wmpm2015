@@ -42,4 +42,8 @@ public class From implements Serializable {
         this.longitude = longitude;
     }
 
+    @Override
+    public String toString(){
+        return String.format("%s,%s", Double.toString(latitude),Double.toString(longitude));
+    }
 }

@@ -32,15 +32,16 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
             }
         });
         from("restlet:http://localhost:" + 49081 + "/routerequest?restletMethod=post")
+                .to("log:com.log.incoming?level=DEBUG")
                 .unmarshal().json(JsonLibrary.Gson, RouteRequest.class)
                 .multicast(new GroupedExchangeAggregationStrategy())
                 .parallelProcessing()
                 .to("activemq:topic:routerequest.openweathermap",
                         "activemq:topic:routerequest.wienerlinien",
-                        "activemq:topic:routerequest.citybike")
+                        "activemq:topic:routerequest.citybike",
+                        "activemq:topic:routerequest.directions")
                 .end()
                 .bean(DecisionMaker.class, "decide(${body})");
-
 
     }
 }

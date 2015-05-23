@@ -42,4 +42,9 @@ public class Coord implements Serializable {
         this.lat = lat;
     }
 
+    @Override
+    public String toString(){
+        return String.format("%d:%d", lon,lat);
+    }
+
 }

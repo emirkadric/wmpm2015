@@ -42,5 +42,10 @@
             <artifactId>camel-gson</artifactId>
             <version>${camel.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.maps</groupId>
+            <artifactId>google-maps-services</artifactId>
+            <version>0.1.7</version>
+        </dependency>
     </dependencies>
 </project>
