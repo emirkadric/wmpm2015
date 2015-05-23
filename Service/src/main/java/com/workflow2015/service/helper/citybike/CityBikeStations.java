@@ -1,5 +1,6 @@
 package com.workflow2015.service.helper.citybike;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -9,10 +10,18 @@ import java.util.TreeMap;
  */
 
 
-public class CityBikeStations {
+public class CityBikeStations implements Serializable {
 
     private List<CityBikeStation> bikes;
     private TreeMap<String,CityBikeStation> bikeTree;
+
+    public List<CityBikeStation> getBikes() {
+        return bikes;
+    }
+
+    public void setBikes(List<CityBikeStation> bikes) {
+        this.bikes = bikes;
+    }
 
     public CityBikeStations(List<CityBikeStation> bikes) {
         this.bikes = bikes;
@@ -37,6 +46,13 @@ public class CityBikeStations {
         String nearestPos = bikeTree.ceilingKey(position.toString());
 
         return bikeTree.get(nearestPos);
+
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("Citybikestations [%s]",size());
 
     }
 

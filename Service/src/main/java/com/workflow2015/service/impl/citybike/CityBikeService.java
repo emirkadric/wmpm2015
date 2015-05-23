@@ -21,7 +21,7 @@ import java.util.List;
 
 
 @org.springframework.stereotype.Component
-public class CityBikeService implements Processor, IService<Object, String> {
+public class CityBikeService implements Processor {
 
     private static final Logger log = LoggerFactory.getLogger(CityBikeService.class);
 
@@ -44,13 +44,10 @@ public class CityBikeService implements Processor, IService<Object, String> {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        String json = exchange.getIn().getBody(String.class);
-        RouteRequest routeRequest = JsonHelper.gson.fromJson(json, RouteRequest.class);
-        String data = this.getDataFromSource(routeRequest);
-        this.pushDataToQueue(data);
+        //RouteRequest routeRequest = exchange.getIn().getBody(RouteRequest.class);
+
     }
 
-    @Override
     public String getDataFromSource(RouteRequest routeRequest) {
         String json = null;
         try {
@@ -83,12 +80,10 @@ public class CityBikeService implements Processor, IService<Object, String> {
         return json.subSequence(0,json.length()%200).toString();//dont spam the debug log
     }
 
-    @Override
     public Object validateDataFetched(String data) {
         return null;
     }
 
-    @Override
     public Object pushDataToQueue(String data) {
         this.getProducerTemplate().sendBody("activemq:topic:routerequest.result", data);
         return null;
