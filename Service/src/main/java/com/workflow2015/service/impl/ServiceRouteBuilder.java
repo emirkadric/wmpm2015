@@ -61,14 +61,17 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
 
         from("activemq:topic:routerequest.wienerlinien").
                 process(wienerLinienService)
+                .recipientList(header("wienerlinienuri"))
+                .marshal().xmljson(xml2JsonConfiguration.getXmlJsonOptions())
                 .to("activemq:topic:requestprocessing.wienerlinien");
 
-        from("activemq:topic:requestprocessing.wienerlinien").marshal().xmljson(xml2JsonConfiguration.getXmlJsonOptions()).process(new Processor() {
+        from("activemq:topic:requestprocessing.wienerlinien").process(new Processor() {
             @Override
             public void process(Exchange exchange) throws Exception {
+                String test = exchange.getIn().getBody(String.class);
                 exchange.getOut().setHeader("wienerlinien", "location");
                 exchange.getOut().setBody(exchange.getIn().getBody(String.class));
             }
-        }).to("activemq:topic:routerequest.wienerlinien");
+        });
     }
 }

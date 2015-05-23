@@ -1,16 +1,16 @@
 package com.workflow2015.service.impl.wienerlinien;
 
-import com.workflow2015.common.helper.JsonHelper;
 import com.workflow2015.common.helper.RouteRequest;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.camel.ProducerTemplate;
-import org.apache.camel.dataformat.xmljson.XmlJsonDataFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Dominik Heigl on 5/21/15.
@@ -20,60 +20,27 @@ public class WienerLinienService implements Processor {
     private static final Logger log = LoggerFactory.getLogger(WienerLinienService.class);
 
     private final CamelContext camelContext;
-    private final ProducerTemplate producerTemplate;
-    private final XmlJsonDataFormat xmlJsonDataFormat;
-
 
     public CamelContext getCamelContext() {
         return camelContext;
     }
 
-    public ProducerTemplate getProducerTemplate() {
-        return producerTemplate;
-    }
-
     @Autowired
-    public WienerLinienService(CamelContext camelContext, ProducerTemplate producerTemplate) {
+    public WienerLinienService(CamelContext camelContext) {
         this.camelContext = camelContext;
-        this.producerTemplate = producerTemplate;
-        this.xmlJsonDataFormat = new XmlJsonDataFormat();
     }
 
-
-   /* public String getDataFromSource(RouteRequest routeRequest) {
-        String xml = null;
-        try {
-            //TODO dynamic URL
-            Exchange exchange = this.getProducerTemplate().request(
-                    "http://www.wienerlinien.at/ogd_routing/XML_TRIP_REQUEST2?loc%20ationServerActive=1&type_origin=any&name_origin=Westbahnhof&%20type_destination=any&name_destination=Stephansplatz"
-                    , new Processor() {
-                        public void process(Exchange exchange) throws Exception {
-                        }
-                    });
-
-            if (null != exchange) {
-                xml = exchange.getOut().getBody(String.class);
-//                xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>";
-                log.debug(xml);
-            }
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
-        }
-        return xml;
-    }*/
+    private String uriBuilder(RouteRequest routeRequest) {
+        Date date = new Date((long) routeRequest.getTime() * 1000);
+        String time = new SimpleDateFormat("HHmm").format(date);
+        return "restlet:http://www.wienerlinien.at/ogd_routing/XML_TRIP_REQUEST2?itdDate=" + routeRequest.getDate() + "&itdTime=" + time + "&type_origin=coord&name_origin=" + routeRequest.getFrom().getLongitude() + ":" + routeRequest.getFrom().getLatitude() + ":WGS84&type_destination=coord&name_destination=" + routeRequest.getTo().getLongitude() + ":" + routeRequest.getTo().getLatitude() + ":WGS84";
+    }
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        //TODO
-        Object header = exchange.getIn().getHeader("wienerlinien");
-
-        if (header == null) {
-            String json = exchange.getIn().getBody(String.class);
-            RouteRequest routeRequest = JsonHelper.gson.fromJson(json, RouteRequest.class);
-        } else if (header.equals("location")) {
-            String json = exchange.getIn().getBody(String.class);
-            log.debug(json);
-        }
+        RouteRequest routeRequest = exchange.getIn().getBody(RouteRequest.class);
+        exchange.getIn().setHeader("wienerlinienuri", this.uriBuilder(routeRequest));
+        exchange.getIn().setBody(routeRequest, RouteRequest.class);
 
 
     }
