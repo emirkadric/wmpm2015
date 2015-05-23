@@ -1,6 +1,5 @@
 package com.workflow2015.common;
 
-import com.workflow2015.common.helper.JsonHelper;
 import com.workflow2015.common.helper.RouteRequest;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
