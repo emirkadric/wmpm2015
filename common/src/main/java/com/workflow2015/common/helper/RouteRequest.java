@@ -8,13 +8,32 @@ import java.io.Serializable;
 
 @Generated("org.jsonschema2pojo")
 public class RouteRequest implements Serializable {
-
+    @Expose
+    private Integer date;
     @Expose
     private Integer time;
     @Expose
     private From from;
     @Expose
     private To to;
+
+    /**
+     *
+     * @return
+     *     The date
+     */
+    public Integer getDate() {
+        return date;
+    }
+
+    /**
+     *
+     * @param date
+     *     The date
+     */
+    public void setDate(Integer date) {
+        this.date = date;
+    }
 
     /**
      * @return The time
