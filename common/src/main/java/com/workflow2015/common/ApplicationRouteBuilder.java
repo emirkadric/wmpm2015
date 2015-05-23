@@ -1,6 +1,5 @@
 package com.workflow2015.common;
 
-import com.workflow2015.common.helper.JsonHelper;
 import com.workflow2015.common.helper.RouteRequest;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -32,7 +31,7 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
             }
         });
         from("restlet:http://localhost:" + 49081 + "/routerequest?restletMethod=post")
-                .unmarshal().json(JsonLibrary.Gson,RouteRequest.class)
+                .unmarshal().json(JsonLibrary.Gson, RouteRequest.class)
                 .multicast()
                 .to("activemq:topic:routerequest.openweathermap",
                         "activemq:topic:routerequest.wienerlinien",

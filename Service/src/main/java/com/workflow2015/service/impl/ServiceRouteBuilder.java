@@ -1,5 +1,6 @@
     package com.workflow2015.service.impl;
 
+import com.workflow2015.common.helper.RouteRequest;
 import com.workflow2015.common.helper.Xml2JsonConfiguration;
 import com.workflow2015.service.aggregator.CityBikeStationAggregationStrategy;
 import com.workflow2015.service.helper.citybike.CityBikeStation;
@@ -10,6 +11,7 @@ import com.workflow2015.service.impl.openweathermap.OpenWeatherMapService;
 import com.workflow2015.service.impl.wienerlinien.WienerLinienService;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +37,8 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
     @Override
     public void configure() throws Exception {
         errorHandler(deadLetterChannel("activemq:topic:error"));
+
+        from("activemq:topic:error").setHeader(Exchange.FILE_NAME, constant("log.txt")).to("file:etc/log?fileExist=Append");
 
         from("activemq:topic:routerequest.openweathermap").
                 process(openWeatherMapService);
