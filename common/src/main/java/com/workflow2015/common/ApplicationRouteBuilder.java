@@ -38,8 +38,9 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
                 RouteRequest routeRequest = JsonHelper.gson.fromJson(json, RouteRequest.class);
                 exchange.getOut().setBody(JsonHelper.gson.toJson(routeRequest, RouteRequest.class), String.class);
             }
-        }).multicast().to("activemq:topic:routerequest.openweathermap",
-                "activemq:topic:routerequest.citybike");
+        })//TODO add additional routes
+                .multicast()
+                .to("activemq:topic:routerequest.openweathermap", "activemq:topic:routerequest.wienerlinien", "activemq:topic:routerequest.citybike");
 
 
     }
