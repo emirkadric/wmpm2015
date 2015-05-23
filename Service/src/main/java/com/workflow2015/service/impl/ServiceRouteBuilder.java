@@ -1,10 +1,10 @@
-    package com.workflow2015.service.impl;
+package com.workflow2015.service.impl;
 
-import com.workflow2015.common.helper.RouteRequest;
 import com.workflow2015.common.helper.Xml2JsonConfiguration;
 import com.workflow2015.service.aggregator.CityBikeStationAggregationStrategy;
+import com.workflow2015.service.aggregator.OpenWeatherMapAggregationStrategy;
 import com.workflow2015.service.helper.citybike.CityBikeStation;
-import com.workflow2015.service.helper.citybike.CityBikeStations;
+import com.workflow2015.service.helper.openweathermap.OpenWeather;
 import com.workflow2015.service.impl.citybike.processor.CityBikeStationFilter;
 import com.workflow2015.service.impl.citybike.processor.CityBikeStationJsonParser;
 import com.workflow2015.service.impl.openweathermap.OpenWeatherMapService;
@@ -32,24 +32,38 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
     private CityBikeStationFilter cityBikeStationFilter;
     @Autowired
     private Xml2JsonConfiguration xml2JsonConfiguration;
+    /*@Autowired
+    private OpenWeatherMapAggregationStrategy openWeatherMapAggregationStrategy;*/
 
 
     @Override
     public void configure() throws Exception {
-        errorHandler(deadLetterChannel("activemq:topic:error"));
+//        errorHandler(deadLetterChannel("activemq:topic:error"));
 
         from("activemq:topic:error").setHeader(Exchange.FILE_NAME, constant("log.txt")).to("file:etc/log?fileExist=Append");
 
         from("activemq:topic:routerequest.openweathermap").
-                process(openWeatherMapService);
+                process(openWeatherMapService)
+                .to("activemq:topic:requestprocessing.openweathermap");
+
+        from("activemq:topic:requestprocessing.openweathermap")
+                .recipientList(header("openweathermapuri")).aggregationStrategy(new OpenWeatherMapAggregationStrategy())
+                .unmarshal().json(JsonLibrary.Gson, OpenWeather.class)
+                .to("activemq:topic:result.openweathermap");
+
+        from("activemq:topic:result.openweathermap")
+                .process(new Processor() {
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        OpenWeather openWeather = exchange.getIn().getBody(OpenWeather.class);
+                    }
+                });
 
         from("activemq:topic:routerequest.citybike")
                 .enrich("restlet:http://api.citybik.es/citybike-wien.json", new CityBikeStationAggregationStrategy())
                 .process(cityBikeStationJsonParser)
                 .process(cityBikeStationFilter)
                 .to("activemq:topic:requestprocessing.citybike");
-
-
 
         from("activemq:topic:requestprocessing.citybike")
                 .process(new Processor() {
@@ -62,6 +76,7 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
         from("activemq:topic:routerequest.wienerlinien").
                 process(wienerLinienService)
                 .to("activemq:topic:requestprocessing.wienerlinien");
+
         from("activemq:topic:requestprocessing.wienerlinien").marshal().xmljson(xml2JsonConfiguration.getXmlJsonOptions()).process(new Processor() {
             @Override
             public void process(Exchange exchange) throws Exception {
