@@ -76,7 +76,7 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                         log.debug(results.length>0 ? results[0].toString() : "no route found");
                     }
                 })
-                .marshal().json(JsonLibrary.Gson)
+                .marshal().serialization()
                 .end();
 
         from("activemq:topic:routerequest.wienerlinien").

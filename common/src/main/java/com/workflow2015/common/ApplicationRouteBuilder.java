@@ -32,7 +32,7 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
             }
         });
         from("restlet:http://localhost:" + 49081 + "/routerequest?restletMethod=post")
-                .to("log:com.log.incoming?level=DEBUG")
+                .wireTap("activemq:topic:tap")
                 .unmarshal().json(JsonLibrary.Gson, RouteRequest.class)
                 .multicast(new GroupedExchangeAggregationStrategy())
                 .parallelProcessing()
@@ -43,5 +43,7 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
                 .end()
                 .bean(DecisionMaker.class, "decide(${body})");
 
+        from("activemq:topic:tap")
+                .to("log:com.log.incoming?level=DEBUG");
     }
 }
