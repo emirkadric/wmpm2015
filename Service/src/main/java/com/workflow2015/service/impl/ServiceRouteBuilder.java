@@ -49,15 +49,9 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                 .process(cityBikeStationFilter)
                 .end();
 
-
-
-        from("activemq:topic:requestprocessing.citybike")
-                .process(new Processor() {
-                    @Override
-                    public void process(Exchange exchange) throws Exception {
-                        CityBikeStation station = exchange.getIn().getBody(CityBikeStation.class);
-                    }
-                });
+        from("activemq:topic:log")
+                .to("file://in?fileExist=Append")
+                .end();
 
         from("activemq:topic:routerequest.wienerlinien").
                 process(wienerLinienService)
