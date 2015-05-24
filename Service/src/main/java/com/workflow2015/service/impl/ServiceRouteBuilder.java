@@ -2,14 +2,13 @@ package com.workflow2015.service.impl;
 
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
-import com.google.maps.GeocodingApi;
 import com.google.maps.model.DirectionsRoute;
-import com.google.maps.model.GeocodingResult;
 import com.workflow2015.common.helper.RouteRequest;
 import com.workflow2015.common.helper.Xml2JsonConfiguration;
 import com.workflow2015.service.aggregator.CityBikeStationAggregationStrategy;
 import com.workflow2015.service.helper.citybike.CityBikeStation;
 import com.workflow2015.service.helper.openweathermap.OpenWeather;
+import com.workflow2015.service.helper.wienerlinien.Wienerlinien;
 import com.workflow2015.service.impl.citybike.processor.CityBikeStationFilter;
 import com.workflow2015.service.impl.citybike.processor.CityBikeStationJsonParser;
 import com.workflow2015.service.impl.openweathermap.OpenWeatherMapService;
@@ -72,8 +71,8 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                         RouteRequest routeRequest = exchange.getIn().getBody(RouteRequest.class);
 
                         GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyDqa7u_SLmSiEPL7dEVfaqicXCh7r6t-Ks");
-                        DirectionsRoute[] results =  DirectionsApi.getDirections(context, routeRequest.getFrom().toString(), routeRequest.getTo().toString()).await();
-                        log.debug(results.length>0 ? results[0].toString() : "no route found");
+                        DirectionsRoute[] results = DirectionsApi.getDirections(context, routeRequest.getFrom().toString(), routeRequest.getTo().toString()).await();
+                        log.debug(results.length > 0 ? results[0].toString() : "no route found");
                     }
                 })
                 .marshal().serialization()
@@ -82,13 +81,14 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
         from("activemq:topic:routerequest.wienerlinien").
                 process(wienerLinienService)
                 .recipientList(header("wienerlinienuri"))
-                .marshal().xmljson(xml2JsonConfiguration.getXmlJsonOptions())
+//                .marshal().xmljson(xml2JsonConfiguration.getXmlJsonOptions())
+                .unmarshal().json(JsonLibrary.Gson, Wienerlinien.class)
                 .to("activemq:topic:requestprocessing.wienerlinien");
 
         from("activemq:topic:requestprocessing.wienerlinien").process(new Processor() {
             @Override
             public void process(Exchange exchange) throws Exception {
-                String test = exchange.getIn().getBody(String.class);
+                Wienerlinien test = exchange.getIn().getBody(Wienerlinien.class);
                 exchange.getOut().setHeader("wienerlinien", "location");
                 exchange.getOut().setBody(exchange.getIn().getBody(String.class));
             }
