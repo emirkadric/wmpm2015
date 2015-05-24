@@ -54,15 +54,18 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                 .enrich("restlet:http://api.citybik.es/citybike-wien.json", new CityBikeStationAggregationStrategy())
                 .process(cityBikeStationJsonParser)
                 .process(cityBikeStationFilter)
-                .end();
-
-        from("activemq:topic:requestprocessing.citybike")
                 .process(new Processor() {
                     @Override
                     public void process(Exchange exchange) throws Exception {
                         CityBikeStation station = exchange.getIn().getBody(CityBikeStation.class);
                     }
                 });
+
+        
+        //add logging
+        from("activemq:topic:log")
+                .to("file://in?fileExist=Append")
+                .end();
 
         from("activemq:topic:routerequest.directions")
                 .process(new Processor() {
