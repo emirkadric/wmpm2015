@@ -49,6 +49,7 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                 .process(cityBikeStationFilter)
                 .end();
 
+        //add logging
         from("activemq:topic:log")
                 .to("file://in?fileExist=Append")
                 .end();
