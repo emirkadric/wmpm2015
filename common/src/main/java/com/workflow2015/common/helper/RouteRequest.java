@@ -1,39 +1,80 @@
+
 package com.workflow2015.common.helper;
 
-/**
- * Created by Dominik Heigl on 5/11/15.
- */
-public class RouteRequest {
-    private Integer time;
-    private Coordinate from;
-    private Coordinate to;
+import com.google.gson.annotations.Expose;
 
-    private Coordinate toCoordinate(String coordinateString) {
-        String[] coordinates = coordinateString.split(":");
-        return new Coordinate(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]));
+import javax.annotation.Generated;
+import java.io.Serializable;
+
+@Generated("org.jsonschema2pojo")
+public class RouteRequest implements Serializable {
+    @Expose
+    private Integer date;
+    @Expose
+    private Integer time;
+    @Expose
+    private From from;
+    @Expose
+    private To to;
+
+    /**
+     *
+     * @return
+     *     The date
+     */
+    public Integer getDate() {
+        return date;
     }
 
+    /**
+     *
+     * @param date
+     *     The date
+     */
+    public void setDate(Integer date) {
+        this.date = date;
+    }
+
+    /**
+     * @return The time
+     */
     public Integer getTime() {
         return time;
     }
 
+    /**
+     * @param time The time
+     */
     public void setTime(Integer time) {
         this.time = time;
     }
 
-    public Coordinate getFrom() {
+    /**
+     * @return The from
+     */
+    public From getFrom() {
         return from;
     }
 
-    public void setFrom(Coordinate from) {
+    /**
+     * @param from The from
+     */
+    public void setFrom(From from) {
         this.from = from;
     }
 
-    public Coordinate getTo() {
+    /**
+     * @return The to
+     */
+    public To getTo() {
         return to;
     }
 
-    public void setTo(Coordinate to) {
+    /**
+     * @param to The to
+     */
+    public void setTo(To to) {
         this.to = to;
     }
+
 }
