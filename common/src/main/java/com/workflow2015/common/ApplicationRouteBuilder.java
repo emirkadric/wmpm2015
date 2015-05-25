@@ -2,6 +2,7 @@ package com.workflow2015.common;
 
 import com.workflow2015.common.helper.RouteRequest;
 import org.apache.camel.Exchange;
+import org.apache.camel.ExchangePattern;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.model.dataformat.JsonLibrary;
@@ -36,19 +37,21 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
                 .choice()
                     .when(simple("${body} != null")) //content based router + message filter
                         .unmarshal().json(JsonLibrary.Gson, RouteRequest.class)
-                        .multicast(new GroupedExchangeAggregationStrategy())
-                        .parallelProcessing()
-                            .to("activemq:topic:routerequest.openweathermap",
-                                "activemq:topic:routerequest.wienerlinien",
-                                "activemq:topic:routerequest.citybike")
-                        .end()
-                        .bean(DecisionMaker.class, "decide(${body})")
+                        .to(ExchangePattern.InOut, "activemq:queue:requests")
                         .endChoice()
                     .otherwise()
                         .log("Recieved empty request")
                         .end();
 
-        from("activemq:topic:tap")
-                .to("log:com.log.incoming?level=DEBUG");
+
+        from("activemq:queue:requests")
+                .multicast(new GroupedExchangeAggregationStrategy())
+                .parallelProcessing()
+                .to("activemq:topic:routerequest.openweathermap",
+                        "activemq:topic:routerequest.wienerlinien",
+                        "activemq:topic:routerequest.citybike")
+                .end()
+                .bean(DecisionMaker.class, "decide(${body})");
+
     }
 }
