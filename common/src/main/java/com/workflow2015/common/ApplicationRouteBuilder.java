@@ -49,7 +49,8 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
                 .parallelProcessing()
                 .to("activemq:topic:routerequest.openweathermap",
                         "activemq:topic:routerequest.wienerlinien",
-                        "activemq:topic:routerequest.citybike")
+                        "activemq:topic:routerequest.citybike",
+                        "activemq:topic:routerequest.directions")
                 .end()
                 .bean(DecisionMaker.class, "decide(${body})");
 
