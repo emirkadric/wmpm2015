@@ -1,19 +1,13 @@
 package com.workflow2015.service.impl.citybike.processor;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.workflow2015.common.helper.RouteRequest;
-import com.workflow2015.service.helper.citybike.CityBikeStation;
-import com.workflow2015.service.helper.citybike.CityBikeStations;
+import com.workflow2015.common.citybike.CityBikeStation;
+import com.workflow2015.common.citybike.CityBikeStations;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.Type;
-import java.util.List;
 
 /**
  * Created by kumar on 23/05/15.

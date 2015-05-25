@@ -37,7 +37,7 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
                 .choice()
                     .when(simple("${body} != null")) //content based router + message filter
                         .unmarshal().json(JsonLibrary.Gson, RouteRequest.class)
-                        .to(ExchangePattern.InOut, "activemq:queue:requests")
+                        .to("activemq:queue:requests")
                         .endChoice()
                     .otherwise()
                         .log("Recieved empty request")
@@ -52,7 +52,8 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
                         "activemq:topic:routerequest.citybike",
                         "activemq:topic:routerequest.directions")
                 .end()
-                .bean(DecisionMaker.class, "decide(${body})");
+                .bean(DecisionMaker.class, "decide(${body})")
+                .marshal().json(JsonLibrary.Gson);
 
     }
 }
