@@ -37,11 +37,15 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
                 .choice()
                     .when(simple("${body} != null")) //content based router + message filter
                         .unmarshal().json(JsonLibrary.Gson, RouteRequest.class)
-                        .to(ExchangePattern.InOut, "activemq:queue:requests")
-                        .endChoice()
+                        .choice()
+                            .when(simple("${body.date} != null")) //todo add all parameter
+                                .to(ExchangePattern.InOut, "activemq:queue:requests")
                     .otherwise()
-                        .log("Recieved empty request")
-                        .end();
+                        .transform().simple("Date missing in request")
+                .endChoice()
+                .otherwise()
+                    .log("Recieved empty request")
+                .end();
 
 
         from("activemq:queue:requests")
