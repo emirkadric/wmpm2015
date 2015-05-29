@@ -17,8 +17,7 @@ public class FileTest {
         this.camelContext = camelContext;
     }
 
-    public void testMe()
-    {
+    public void testMe() {
         try {
             camelContext.addRoutes(new RouteBuilder() {
 
@@ -31,9 +30,8 @@ public class FileTest {
             });
             Thread.sleep(1000 * 3);
             camelContext.stop();
-        }catch (Exception e)
-        {
-            System.out.println("Greska: "+e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Greska: " + e.getMessage());
         }
 
     }

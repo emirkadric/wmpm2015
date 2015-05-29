@@ -1,4 +1,3 @@
-
 package com.workflow2015.service.helper.openweathermap;
 
 import com.google.gson.annotations.Expose;
@@ -43,8 +42,8 @@ public class Coord implements Serializable {
     }
 
     @Override
-    public String toString(){
-        return String.format("%d:%d", lon,lat);
+    public String toString() {
+        return String.format("%d:%d", lon, lat);
     }
 
 }

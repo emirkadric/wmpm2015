@@ -15,6 +15,7 @@ public class NotificationRouteBuilder extends RouteBuilder {
 
     @Autowired
     TwitterNotification twitterNotification;
+
     @Override
     public void configure() throws Exception {
 

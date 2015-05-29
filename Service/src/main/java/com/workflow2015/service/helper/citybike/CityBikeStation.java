@@ -92,8 +92,7 @@ public class CityBikeStation implements Serializable {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
 }

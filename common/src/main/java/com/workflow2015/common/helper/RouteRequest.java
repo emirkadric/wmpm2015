@@ -1,4 +1,3 @@
-
 package com.workflow2015.common.helper;
 
 import com.google.gson.annotations.Expose;
@@ -18,18 +17,14 @@ public class RouteRequest implements Serializable {
     private To to;
 
     /**
-     *
-     * @return
-     *     The date
+     * @return The date
      */
     public Integer getDate() {
         return date;
     }
 
     /**
-     *
-     * @param date
-     *     The date
+     * @param date The date
      */
     public void setDate(Integer date) {
         this.date = date;

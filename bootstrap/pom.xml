@@ -33,7 +33,6 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-spring-boot</artifactId>
-            <version>${camel.version}</version>
         </dependency>
         <dependency>
             <groupId>com.workflow2015</groupId>
@@ -48,6 +47,11 @@
         <dependency>
             <groupId>com.workflow2015</groupId>
             <artifactId>com.workflow2015.notification</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.workflow2015</groupId>
+            <artifactId>com.workflow2015.database</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

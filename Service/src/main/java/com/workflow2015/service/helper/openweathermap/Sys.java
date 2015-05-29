@@ -1,4 +1,3 @@
-
 package com.workflow2015.service.helper.openweathermap;
 
 import com.google.gson.annotations.Expose;

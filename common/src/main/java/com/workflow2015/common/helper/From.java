@@ -1,4 +1,3 @@
-
 package com.workflow2015.common.helper;
 
 import com.google.gson.annotations.Expose;
@@ -43,7 +42,7 @@ public class From implements Serializable {
     }
 
     @Override
-    public String toString(){
-        return String.format("%s,%s", Double.toString(latitude),Double.toString(longitude));
+    public String toString() {
+        return String.format("%s,%s", Double.toString(latitude), Double.toString(longitude));
     }
 }
