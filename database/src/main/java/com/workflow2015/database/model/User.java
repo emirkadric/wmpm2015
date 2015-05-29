@@ -52,5 +52,14 @@ public class User implements IUser, Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public String toString() {
+        return String.format("Id=%s, firstname=%s, lastname=%s, email=%s",
+                this.getUserid(),
+                this.getFirstname(),
+                this.getLastname(),
+                this.getEmail()
+        );
+    }
 }
 

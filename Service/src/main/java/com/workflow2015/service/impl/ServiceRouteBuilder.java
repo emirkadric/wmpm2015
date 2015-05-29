@@ -5,6 +5,7 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsRoute;
 import com.workflow2015.common.helper.RouteRequest;
 import com.workflow2015.common.helper.Xml2JsonConfiguration;
+import com.workflow2015.database.model.User;
 import com.workflow2015.service.aggregator.CityBikeStationAggregationStrategy;
 import com.workflow2015.service.helper.citybike.CityBikeStation;
 import com.workflow2015.service.helper.openweathermap.OpenWeather;
@@ -61,7 +62,7 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                     }
                 });
 
-        
+
         //add logging
         from("activemq:topic:log")
                 .to("file://in?fileExist=Append")
@@ -91,10 +92,25 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
         from("activemq:topic:requestprocessing.wienerlinien").process(new Processor() {
             @Override
             public void process(Exchange exchange) throws Exception {
-                Wienerlinien test = exchange.getIn().getBody(Wienerlinien.class);
+                /*Wienerlinien test = exchange.getIn().getBody(Wienerlinien.class);
                 exchange.getOut().setHeader("wienerlinien", "location");
-                exchange.getOut().setBody(exchange.getIn().getBody(String.class));
+                exchange.getOut().setBody(exchange.getIn().getBody(String.class));*/
+                User u = new User();
+                u.setFirstname("asdf");
+                u.setLastname("jklo");
+                u.setEmail("asdf@aksjdf.com");
+                exchange.getIn().setBody(u, User.class);
             }
-        });
+        }).to("jpa:User");
+
+        from("jpa://User?consumer.query=select o from User o")
+                .process(new Processor() {
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        log.info("Querying User");
+                        User o = exchange.getIn().getBody(User.class);
+                        log.info(o.toString());
+                    }
+                });
     }
 }
