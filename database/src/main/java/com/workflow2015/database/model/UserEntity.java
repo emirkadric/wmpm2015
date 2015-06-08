@@ -1,12 +1,13 @@
 package com.workflow2015.database.model;
 
+
 import javax.persistence.*;
 
 /**
- * Created by emirk on 05/06/2015.
+ * Created by emirk on 08/06/2015.
  */
 @Entity
-@Table(name = "USER", schema = "PUBLIC", catalog = "DB")
+@Table(name = "USER", schema = "PUBLIC", catalog = "MOJDB")
 public class UserEntity {
     private int id;
     private String firstname;
@@ -88,14 +89,5 @@ public class UserEntity {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (subscribed ? 1 : 0);
         return result;
-    }
-    public String toString() {
-        return String.format("Id=%s, firstname=%s, lastname=%s, email=%s, subscribed=%s",
-                this.getId(),
-                this.getFirstname(),
-                this.getLastname(),
-                this.getEmail(),
-                this.isSubscribed()
-        );
     }
 }
