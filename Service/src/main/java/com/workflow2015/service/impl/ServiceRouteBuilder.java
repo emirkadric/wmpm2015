@@ -103,7 +103,7 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
             }
         }).to("jpa:User");
 
-        from("jpa://User?consumer.query=select o from User o")
+        from("jpa://User?consumer.query=select o from User o&consumeDelete=false&consumer.delay=5000")
                 .process(new Processor() {
                     @Override
                     public void process(Exchange exchange) throws Exception {
@@ -111,6 +111,6 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                         User o = exchange.getIn().getBody(User.class);
                         log.info(o.toString());
                     }
-                });
+                }).end();
     }
 }
