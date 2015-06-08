@@ -7,17 +7,15 @@ import javax.persistence.*;
  * Created by emirk on 08/06/2015.
  */
 @Entity
-@Table(name = "USER", schema = "PUBLIC", catalog = "MOJDB")
-public class User {
+public class User implements IUser{
     private int id;
     private String firstname;
     private String lastname;
     private String email;
-    private boolean subscribed;
+    private Boolean subscribed = false;
 
     @Id
     @GeneratedValue
-    @Column(name = "ID")
     public int getId() {
         return id;
     }
@@ -26,8 +24,7 @@ public class User {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "FIRSTNAME")
+    @Column
     public String getFirstname() {
         return firstname;
     }
@@ -36,8 +33,8 @@ public class User {
         this.firstname = firstname;
     }
 
-    @Basic
-    @Column(name = "LASTNAME")
+    @Column
+
     public String getLastname() {
         return lastname;
     }
@@ -46,8 +43,7 @@ public class User {
         this.lastname = lastname;
     }
 
-    @Basic
-    @Column(name = "EMAIL")
+    @Column
     public String getEmail() {
         return email;
     }
@@ -56,13 +52,12 @@ public class User {
         this.email = email;
     }
 
-    @Basic
-    @Column(name = "SUBSCRIBED")
-    public boolean isSubscribed() {
+    @Column
+    public Boolean getSubscribed() {
         return subscribed;
     }
 
-    public void setSubscribed(boolean subscribed) {
+    public void setSubscribed(Boolean subscribed) {
         this.subscribed = subscribed;
     }
 
@@ -90,5 +85,15 @@ public class User {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (subscribed ? 1 : 0);
         return result;
+    }
+
+    public String toString() {
+        return String.format("Id=%s, firstname=%s, lastname=%s, email=%s, subscribed=%s",
+                this.getId(),
+                this.getFirstname(),
+                this.getLastname(),
+                this.getEmail(),
+                this.getSubscribed()
+        );
     }
 }

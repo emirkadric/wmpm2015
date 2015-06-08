@@ -4,9 +4,9 @@ package com.workflow2015.database.model;
  * Created by Dominik Heigl on 5/29/15.
  */
 public interface IUser {
-    int getUserid();
+    int getId();
 
-    void setUserid(int userid);
+    void setId(int id);
 
     String getFirstname();
 
@@ -19,4 +19,8 @@ public interface IUser {
     String getEmail();
 
     void setEmail(String email);
+
+    Boolean getSubscribed();
+
+    void setSubscribed(Boolean subscribed);
 }

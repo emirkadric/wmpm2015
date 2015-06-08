@@ -5,6 +5,7 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsRoute;
 import com.workflow2015.common.helper.RouteRequest;
 import com.workflow2015.common.helper.Xml2JsonConfiguration;
+import com.workflow2015.database.model.IUser;
 import com.workflow2015.database.model.User;
 import com.workflow2015.service.aggregator.CityBikeStationAggregationStrategy;
 import com.workflow2015.service.helper.citybike.CityBikeStation;
@@ -95,7 +96,7 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                 /*Wienerlinien test = exchange.getIn().getBody(Wienerlinien.class);
                 exchange.getOut().setHeader("wienerlinien", "location");
                 exchange.getOut().setBody(exchange.getIn().getBody(String.class));*/
-                User u = new User();
+                IUser u = new User();
                 u.setFirstname("asdf");
                 u.setLastname("jklo");
                 u.setEmail("asdf@aksjdf.com");
@@ -109,7 +110,7 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                     @Override
                     public void process(Exchange exchange) throws Exception {
                         log.info("Querying User");
-                        User o = exchange.getIn().getBody(User.class);
+                        IUser o = exchange.getIn().getBody(User.class);
                         log.info(o.toString());
                     }
                 }).end();
