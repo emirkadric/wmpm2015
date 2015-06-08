@@ -99,6 +99,7 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                 u.setFirstname("asdf");
                 u.setLastname("jklo");
                 u.setEmail("asdf@aksjdf.com");
+                u.setSubscribed(true);
                 exchange.getIn().setBody(u, User.class);
             }
         }).to("jpa:User");
