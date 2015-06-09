@@ -90,26 +90,21 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                 .unmarshal().json(JsonLibrary.Gson, Wienerlinien.class)
                 .to("activemq:topic:requestprocessing.wienerlinien");
 
-        from("activemq:topic:requestprocessing.wienerlinien").process(new Processor() {
+       /* from("activemq:topic:requestprocessing.wienerlinien").process(new Processor() {
             @Override
             public void process(Exchange exchange) throws Exception {
                 /*Wienerlinien test = exchange.getIn().getBody(Wienerlinien.class);
                 exchange.getOut().setHeader("wienerlinien", "location");
-                exchange.getOut().setBody(exchange.getIn().getBody(String.class));*/
-                IUser u = new User();
-                u.setFirstname("asdf");
-                u.setLastname("jklo");
-                u.setEmail("asdf@aksjdf.com");
-                u.setSubscribed(true);
-                exchange.getIn().setBody(u, User.class);
+                exchange.getOut().setBody(exchange.getIn().getBody(String.class));
             }
-        }).to("jpa:User");
+        }).to("jpa:User");*/
 
-        from("jpa://User?consumer.query=select o from User o&consumeDelete=false&consumer.delay=5000")
+
+        from("jpa://User?consumer.query=select o from User o&consumeDelete=false&consumer.delay=604800000")
                 .process(new Processor() {
                     @Override
                     public void process(Exchange exchange) throws Exception {
-                        log.info("Querying User");
+                        log.info("------Querying User-----");
                         IUser o = exchange.getIn().getBody(User.class);
                         log.info(o.toString());
                     }
