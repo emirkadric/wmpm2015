@@ -1,13 +1,17 @@
 package com.workflow2015.database.model;
 
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.io.Serializable;
 
 /**
  * Created by emirk on 08/06/2015.
  */
 @Entity
-public class User implements IUser{
+public class User implements IUser, Serializable {
     private int id;
     private String firstname;
     private String lastname;
