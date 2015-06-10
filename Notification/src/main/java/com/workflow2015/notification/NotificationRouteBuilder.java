@@ -1,5 +1,7 @@
 package com.workflow2015.notification;
 
+
+import com.workflow2015.notification.impl.EmailAdvertising;
 import com.workflow2015.notification.impl.TwitterNotification;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +18,30 @@ public class NotificationRouteBuilder extends RouteBuilder {
     @Autowired
     TwitterNotification twitterNotification;
 
+    @Autowired
+    EmailAdvertising emailAdvertising;
+
     @Override
     public void configure() throws Exception {
 
         from("timer:tmr?period=300000s")
-                .routeId("twitterROUTEid").log("*************IDEMO NA MARS***************")
+                .routeId("twitterROUTEid").log("*************Twitter***************")
                 .process(twitterNotification)
                 .to(twitterEndpoint)
-                .log("--------Finished posting on twitter ------- ")
+                .log("--------Finished posting on Twitter ------- ")
                 .end();
 
+        from("jpa://User?consumer.query=select o from User o where o.subscribed=true&consumeDelete=false&consumer.delay=604800000")
+                .routeId("subscriberCollection").log("***********Fetching of subscribers started************")
+                .log("CamelBatchSize (property) = ${property.CamelBatchSize}")
+                .log("CamelBatchSize (header)   = ${header.CamelBatchSize}")
+                .to("activemq:topic:subscribers").log("**********Fetching of subscribers ended!")
+                .end();
+
+        from("activemq:topic:subscribers")
+                .routeId("email adverts").log("+++++++++++++Email advertising started!+++++++++++++")
+                .process(emailAdvertising)
+                .to("smtps://smtp.gmail.com:465?username=workflowss2015@gmail.com&password=workflow")
+                .end();
     }
 }

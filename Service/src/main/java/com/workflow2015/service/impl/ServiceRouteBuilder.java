@@ -21,6 +21,7 @@ import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 /**
  * Created by Dominik Heigl on 5/11/15.
  */
@@ -99,15 +100,5 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
             }
         }).to("jpa:User");*/
 
-
-        from("jpa://User?consumer.query=select o from User o&consumeDelete=false&consumer.delay=604800000")
-                .process(new Processor() {
-                    @Override
-                    public void process(Exchange exchange) throws Exception {
-                        log.info("------Querying User-----");
-                        IUser o = exchange.getIn().getBody(User.class);
-                        log.info(o.toString());
-                    }
-                }).end();
     }
 }

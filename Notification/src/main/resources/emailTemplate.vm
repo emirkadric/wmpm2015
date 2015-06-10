@@ -1,0 +1,12 @@
+<html>
+	<body>
+		<title>Hello ${body.firstname}, this is our weekly offer!</title>
+		<p>
+			We would like to offer you the very best of our service!
+
+			Hope you like our offer Mr/Mrs {$body.lastname}
+		</p>
+	
+	</body>
+ 
+</html>
