@@ -1,14 +1,11 @@
 package com.workflow2015.common;
 
 import com.google.gson.annotations.Expose;
-import com.google.maps.model.DirectionsRoute;
 import com.workflow2015.common.citybike.CityBikeStation;
 import com.workflow2015.common.directions.DirectionsDTO;
 import com.workflow2015.common.openweathermap.OpenWeather;
 import com.workflow2015.common.wienerlinien.Wienerlinien;
 import org.apache.camel.Exchange;
-import org.apache.commons.lang.SerializationUtils;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Generated;
 import java.util.List;
@@ -23,9 +20,9 @@ public class DecisionMaker {
     @Expose
     CityBikeStation nearestCitybikeStation;
     @Expose
-    Wienerlinien metro;
+    DirectionsDTO directions;
     @Expose
-    DirectionsDTO route;
+    Wienerlinien subway;
     @Expose
     OpenWeather weather;
 
@@ -39,9 +36,9 @@ public class DecisionMaker {
             else if(body instanceof CityBikeStation)
                 nearestCitybikeStation = (CityBikeStation) body;
             else if(body instanceof Wienerlinien)
-                metro = (Wienerlinien) body;
+                subway = (Wienerlinien) body;
             else if(body instanceof DirectionsDTO)
-                route = (DirectionsDTO) body;
+                directions = (DirectionsDTO) body;
             else
                 new RuntimeException("Unknown type:" + body);
         }

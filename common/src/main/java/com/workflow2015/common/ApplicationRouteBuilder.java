@@ -20,31 +20,23 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
 
     private static final Logger log = LoggerFactory.getLogger(ApplicationRouteBuilder.class);
 
-
-    @Autowired
-    private ProducerTemplate producerTemplate;
-
     @Override
     public void configure() throws Exception {
-        from("activemq:topic:routerequest.result").process(new Processor() {
-            @Override
-            public void process(Exchange exchange) throws Exception {
-                log.debug("routerequest.result: " + exchange.getIn().getBody(String.class));
-            }
-        });
         from("restlet:http://localhost:" + 49081 + "/routerequest?restletMethod=post")
                 .wireTap("activemq:queue:log")
                 .choice()
                     .when(simple("${body} != null")) //content based router + message filter
                         .unmarshal().json(JsonLibrary.Gson, RouteRequest.class)
                         .choice()
-                            .when(simple("${body.date} != null")) //todo add all parameter
-                                .to(ExchangePattern.InOut, "activemq:queue:requests")
+                            .when(simple("${body.time} != null && ${body.from} != null " +
+                                    "&& ${body.from.latitude} != null && ${body.from.longitude} != null " +
+                                    "&& ${body.to} != null && ${body.to.longitude} != null && ${body.to.latitude} != null")) //todo add all parameter
+                                .to("activemq:queue:requests")
                     .otherwise()
-                        .transform().simple("Date missing in request")
+                        .transform().simple("Request not valid")
                 .endChoice()
                 .otherwise()
-                    .log("Recieved empty request")
+                    .transform().simple("Request empty")
                 .end();
 
 
