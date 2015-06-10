@@ -56,7 +56,8 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
                         "activemq:topic:routerequest.citybike",
                         "activemq:topic:routerequest.directions")
                 .end()
-                .bean(DecisionMaker.class, "decide(${body})");
+                .bean(DecisionMaker.class, "decide(${body})")
+                .marshal().json(JsonLibrary.Gson);
 
     }
 }

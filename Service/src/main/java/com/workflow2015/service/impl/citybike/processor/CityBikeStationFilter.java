@@ -1,8 +1,8 @@
 package com.workflow2015.service.impl.citybike.processor;
 
 import com.workflow2015.common.helper.RouteRequest;
-import com.workflow2015.service.helper.citybike.CityBikeStation;
-import com.workflow2015.service.helper.citybike.CityBikeStations;
+import com.workflow2015.common.citybike.CityBikeStation;
+import com.workflow2015.common.citybike.CityBikeStations;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.slf4j.Logger;
