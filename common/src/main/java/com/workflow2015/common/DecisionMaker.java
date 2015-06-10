@@ -3,6 +3,7 @@ package com.workflow2015.common;
 import com.google.gson.annotations.Expose;
 import com.google.maps.model.DirectionsRoute;
 import com.workflow2015.common.citybike.CityBikeStation;
+import com.workflow2015.common.directions.DirectionsDTO;
 import com.workflow2015.common.openweathermap.OpenWeather;
 import com.workflow2015.common.wienerlinien.Wienerlinien;
 import org.apache.camel.Exchange;
@@ -18,14 +19,13 @@ import java.util.List;
 
 @Generated("org.jsonschema2pojo")
 public class DecisionMaker {
-
-
+    
     @Expose
     CityBikeStation nearestCitybikeStation;
     @Expose
     Wienerlinien metro;
     @Expose
-    String route;
+    DirectionsDTO route;
     @Expose
     OpenWeather weather;
 
@@ -40,8 +40,8 @@ public class DecisionMaker {
                 nearestCitybikeStation = (CityBikeStation) body;
             else if(body instanceof Wienerlinien)
                 metro = (Wienerlinien) body;
-            else if(body instanceof String)
-                route = (String) body;
+            else if(body instanceof DirectionsDTO)
+                route = (DirectionsDTO) body;
             else
                 new RuntimeException("Unknown type:" + body);
         }
