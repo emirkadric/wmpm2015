@@ -17,10 +17,16 @@ import com.workflow2015.service.impl.citybike.processor.CityBikeStationJsonParse
 import com.workflow2015.service.impl.openweathermap.OpenWeatherMapService;
 import com.workflow2015.service.impl.wienerlinien.WienerLinienService;
 import org.apache.camel.Exchange;
+import org.apache.camel.Expression;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.Processor;
+import org.apache.camel.component.restlet.RestletConstants;
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.restlet.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 /**
  * Created by Dominik Heigl on 5/11/15.
@@ -59,39 +65,45 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
 
         
         //add logging
-        from("activemq:topic:log")
-                .to("file://in?fileExist=Append")
-                .end();
+        from("activemq:queue:log")
+        .setHeader(Exchange.FILE_NAME, constant("requests.txt"))
+                .process(exchange -> {
+                    Long ts = exchange.getIn().getHeader("org.restlet.startTime", Long.class);
+                    String body = exchange.getIn().getBody(String.class);
+                    //String ts = exchange.getIn().getHeader()
+                    body = String.format("%s: %s%s", new Date(ts),body,System.getProperty("line.separator"));
+                    exchange.getIn().setBody(body);
+                })
+                .to("file://log?fileExist=Append")
+
+        .end();
 
         from("activemq:topic:routerequest.directions")
-                .process(new Processor() {
-                    @Override
-                    public void process(Exchange exchange) throws Exception {
-                        RouteRequest routeRequest = exchange.getIn().getBody(RouteRequest.class);
+                .process(exchange -> {
+                    RouteRequest routeRequest = exchange.getIn().getBody(RouteRequest.class);
 
-                        GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyDqa7u_SLmSiEPL7dEVfaqicXCh7r6t-Ks");
-                        DirectionsRoute[] results = DirectionsApi.getDirections(context, routeRequest.getFrom().toString(), routeRequest.getTo().toString()).await();
-                        log.debug(results.length > 0 ? results[0].toString() : "no route found");
-                        DirectionsDTO directions = new DirectionsDTO();
-                        for (int i = 0; i < results.length; i++) {
-                            for (int j = 0; j < results[i].legs.length; j++) {
-                                String duration = results[i].legs[j].duration.humanReadable;
-                                String distance = results[i].legs[j].distance.humanReadable;
-                                DirectionsLegDTO leg = new DirectionsLegDTO(duration,distance);
-                                for (int k = 0; k < results[i].legs[j].steps.length; k++) {
-                                    String durationStep = results[i].legs[j].steps[k].duration.humanReadable;
-                                    String distanceStep = results[i].legs[j].steps[k].distance.humanReadable;
-                                    String directionsHTML = results[i].legs[j].steps[k].htmlInstructions;
-                                    DirectionsStepDTO step = new DirectionsStepDTO(durationStep, distanceStep,directionsHTML);
-                                    leg.addStep(step);
+                    GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyDqa7u_SLmSiEPL7dEVfaqicXCh7r6t-Ks");
+                    DirectionsRoute[] results = DirectionsApi.getDirections(context, routeRequest.getFrom().toString(), routeRequest.getTo().toString()).await();
+                    log.debug(results.length > 0 ? results[0].toString() : "no route found");
+                    DirectionsDTO directions = new DirectionsDTO();
+                    for (int i = 0; i < results.length; i++) {
+                        for (int j = 0; j < results[i].legs.length; j++) {
+                            String duration = results[i].legs[j].duration.humanReadable;
+                            String distance = results[i].legs[j].distance.humanReadable;
+                            DirectionsLegDTO leg = new DirectionsLegDTO(duration,distance);
+                            for (int k = 0; k < results[i].legs[j].steps.length; k++) {
+                                String durationStep = results[i].legs[j].steps[k].duration.humanReadable;
+                                String distanceStep = results[i].legs[j].steps[k].distance.humanReadable;
+                                String directionsHTML = results[i].legs[j].steps[k].htmlInstructions;
+                                DirectionsStepDTO step = new DirectionsStepDTO(durationStep, distanceStep,directionsHTML);
+                                leg.addStep(step);
 
-                                }
-                                directions.addLeg(leg);
                             }
+                            directions.addLeg(leg);
                         }
-                        if (results.length > 0)
-                            exchange.getIn().setBody(directions);
                     }
+                    if (results.length > 0)
+                        exchange.getIn().setBody(directions);
                 })
                 .end();
 

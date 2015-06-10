@@ -33,7 +33,7 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
             }
         });
         from("restlet:http://localhost:" + 49081 + "/routerequest?restletMethod=post")
-                .wireTap("activemq:topic:log")
+                .wireTap("activemq:queue:log")
                 .choice()
                     .when(simple("${body} != null")) //content based router + message filter
                         .unmarshal().json(JsonLibrary.Gson, RouteRequest.class)
