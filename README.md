@@ -26,3 +26,6 @@ open a terminal, go to the root directory of the project:
 > cd bootstrap/
 
 > spring-boot:run
+
+## Test Parameter (postman)
+> {"time":1431356134,"from":{"latitude":48.21025,"longitude":16.35536},"to":{"latitude":48.19603,"longitude":16.36962}}
