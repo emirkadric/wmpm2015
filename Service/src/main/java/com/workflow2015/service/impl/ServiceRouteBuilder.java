@@ -37,8 +37,6 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
     private CityBikeStationJsonParser cityBikeStationJsonParser;
     @Autowired
     private CityBikeStationFilter cityBikeStationFilter;
-    @Autowired
-    private Xml2JsonConfiguration xml2JsonConfiguration;
 
 
     @Override
@@ -57,12 +55,7 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                 .enrich("restlet:http://api.citybik.es/citybike-wien.json", new CityBikeStationAggregationStrategy())
                 .process(cityBikeStationJsonParser)
                 .process(cityBikeStationFilter)
-                .process(new Processor() {
-                    @Override
-                    public void process(Exchange exchange) throws Exception {
-                        CityBikeStation station = exchange.getIn().getBody(CityBikeStation.class);
-                    }
-                });
+                .end();
 
         
         //add logging
