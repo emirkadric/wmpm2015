@@ -1,4 +1,3 @@
-
 package com.workflow2015.common.helper;
 
 import com.google.gson.annotations.Expose;
@@ -8,44 +7,25 @@ import java.io.Serializable;
 
 @Generated("org.jsonschema2pojo")
 public class RouteRequest implements Serializable {
+
     @Expose
-    private Integer date;
-    @Expose
-    private Integer time;
+    private Long time;
     @Expose
     private From from;
     @Expose
     private To to;
 
     /**
-     *
-     * @return
-     *     The date
-     */
-    public Integer getDate() {
-        return date;
-    }
-
-    /**
-     *
-     * @param date
-     *     The date
-     */
-    public void setDate(Integer date) {
-        this.date = date;
-    }
-
-    /**
      * @return The time
      */
-    public Integer getTime() {
+    public Long getTime() {
         return time;
     }
 
     /**
      * @param time The time
      */
-    public void setTime(Integer time) {
+    public void setTime(Long time) {
         this.time = time;
     }
 

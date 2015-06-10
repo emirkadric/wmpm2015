@@ -17,14 +17,17 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <artifactId>com.workflow2015.database</artifactId>
+            <groupId>com.workflow2015</groupId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-http</artifactId>
-            <version>${camel.version}</version>
         </dependency>
         <!-- add dependencies to other modules if you need it-->
     </dependencies>

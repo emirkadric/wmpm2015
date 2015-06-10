@@ -2,6 +2,7 @@ package com.workflow2015.common;
 
 import com.workflow2015.common.helper.RouteRequest;
 import org.apache.camel.Exchange;
+import org.apache.camel.ExchangePattern;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.model.dataformat.JsonLibrary;
@@ -19,21 +20,27 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
 
     private static final Logger log = LoggerFactory.getLogger(ApplicationRouteBuilder.class);
 
-
-    @Autowired
-    private ProducerTemplate producerTemplate;
-
     @Override
     public void configure() throws Exception {
-        from("activemq:topic:routerequest.result").process(new Processor() {
-            @Override
-            public void process(Exchange exchange) throws Exception {
-                log.debug("routerequest.result: " + exchange.getIn().getBody(String.class));
-            }
-        });
         from("restlet:http://localhost:" + 49081 + "/routerequest?restletMethod=post")
-                .wireTap("activemq:topic:tap")
-                .unmarshal().json(JsonLibrary.Gson, RouteRequest.class)
+                .wireTap("activemq:queue:log")
+                .choice()
+                    .when(simple("${body} != null")) //content based router + message filter
+                        .unmarshal().json(JsonLibrary.Gson, RouteRequest.class)
+                        .choice()
+                            .when(simple("${body.time} != null && ${body.from} != null " +
+                                    "&& ${body.from.latitude} != null && ${body.from.longitude} != null " +
+                                    "&& ${body.to} != null && ${body.to.longitude} != null && ${body.to.latitude} != null")) //todo add all parameter
+                                .to("activemq:queue:requests")
+                    .otherwise()
+                        .transform().simple("Request not valid")
+                .endChoice()
+                .otherwise()
+                    .transform().simple("Request empty")
+                .end();
+
+
+        from("activemq:queue:requests")
                 .multicast(new GroupedExchangeAggregationStrategy())
                 .parallelProcessing()
                 .to("activemq:topic:routerequest.openweathermap",
@@ -41,9 +48,8 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
                         "activemq:topic:routerequest.citybike",
                         "activemq:topic:routerequest.directions")
                 .end()
-                .bean(DecisionMaker.class, "decide(${body})");
+                .bean(DecisionMaker.class, "decide(${body})")
+                .marshal().json(JsonLibrary.Gson);
 
-        from("activemq:topic:tap")
-                .to("log:com.log.incoming?level=DEBUG");
     }
 }

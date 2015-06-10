@@ -33,7 +33,8 @@ public class WienerLinienService implements Processor {
     private String uriBuilder(RouteRequest routeRequest) {
         Date date = new Date((long) routeRequest.getTime() * 1000);
         String time = new SimpleDateFormat("HHmm").format(date);
-        return "restlet:http://www.wienerlinien.at/ogd_routing/XML_TRIP_REQUEST2?itdDate=" + routeRequest.getDate() + "&itdTime=" + time + "&type_origin=coord&name_origin=" + routeRequest.getFrom().getLongitude() + ":" + routeRequest.getFrom().getLatitude() + ":WGS84&type_destination=coord&name_destination=" + routeRequest.getTo().getLongitude() + ":" + routeRequest.getTo().getLatitude() + ":WGS84&outputFormat=JSON";
+        String d = new SimpleDateFormat("yyyyMMdd").format(date);
+        return "restlet:http://www.wienerlinien.at/ogd_routing/XML_TRIP_REQUEST2?itdDate=" + d + "&itdTime=" + time + "&type_origin=coord&name_origin=" + routeRequest.getFrom().getLongitude() + ":" + routeRequest.getFrom().getLatitude() + ":WGS84&type_destination=coord&name_destination=" + routeRequest.getTo().getLongitude() + ":" + routeRequest.getTo().getLatitude() + ":WGS84&outputFormat=JSON";
     }
 
     @Override

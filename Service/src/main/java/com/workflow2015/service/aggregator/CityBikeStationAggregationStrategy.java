@@ -15,7 +15,7 @@ public class CityBikeStationAggregationStrategy implements AggregationStrategy {
     @Override
     public Exchange aggregate(Exchange original, Exchange resource) {
         RouteRequest rootRequest = original.getIn().getBody(RouteRequest.class);
-        resource.setProperty("rootRequest",rootRequest);
+        resource.setProperty("rootRequest", rootRequest);
         return resource;
     }
 }
