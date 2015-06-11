@@ -18,10 +18,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuilder {
 
-    private static final Logger log = LoggerFactory.getLogger(ApplicationRouteBuilder.class);
-
     @Override
     public void configure() throws Exception {
+
         from("restlet:http://localhost:" + 49081 + "/routerequest?restletMethod=post")
                 .wireTap("activemq:queue:log")
                 .choice()
@@ -30,7 +29,7 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
                         .choice()
                             .when(simple("${body.time} != null && ${body.from} != null " +
                                     "&& ${body.from.latitude} != null && ${body.from.longitude} != null " +
-                                    "&& ${body.to} != null && ${body.to.longitude} != null && ${body.to.latitude} != null")) //todo add all parameter
+                                    "&& ${body.to} != null && ${body.to.longitude} != null && ${body.to.latitude} != null"))
                                 .to("activemq:queue:requests")
                     .otherwise()
                         .transform().simple("Request not valid")
