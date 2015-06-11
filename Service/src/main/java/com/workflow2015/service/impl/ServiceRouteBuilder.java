@@ -2,19 +2,17 @@ package com.workflow2015.service.impl;
 
 import com.workflow2015.common.openweathermap.OpenWeather;
 import com.workflow2015.common.wienerlinien.Wienerlinien;
-import com.workflow2015.service.aggregator.CityBikeStationAggregationStrategy;
-import com.workflow2015.service.impl.citybike.processor.CityBikeStationFilter;
-import com.workflow2015.service.impl.citybike.processor.CityBikeStationJsonParser;
-import com.workflow2015.service.impl.directions.DirectionsProcessor;
-import com.workflow2015.service.impl.logger.RequestLogger;
-import com.workflow2015.service.impl.openweathermap.OpenWeatherMapService;
-import com.workflow2015.service.impl.wienerlinien.WienerLinienService;
+import com.workflow2015.service.impl.aggregator.CityBikeStationAggregationStrategy;
+import com.workflow2015.service.impl.processor.CityBikeStationFilter;
+import com.workflow2015.service.impl.processor.CityBikeStationJsonParser;
+import com.workflow2015.service.impl.processor.DirectionsProcessor;
+import com.workflow2015.service.impl.processor.RequestLogger;
+import com.workflow2015.service.impl.processor.OpenWeatherMapService;
+import com.workflow2015.service.impl.processor.WienerLinienService;
 import org.apache.camel.Exchange;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 /**
  * Created by Dominik Heigl on 5/11/15.

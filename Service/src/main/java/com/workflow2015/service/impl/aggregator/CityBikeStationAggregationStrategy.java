@@ -1,4 +1,4 @@
-package com.workflow2015.service.aggregator;
+package com.workflow2015.service.impl.aggregator;
 
 import com.workflow2015.common.helper.RouteRequest;
 import org.apache.camel.Exchange;

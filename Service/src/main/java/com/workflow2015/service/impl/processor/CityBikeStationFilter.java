@@ -1,4 +1,4 @@
-package com.workflow2015.service.impl.citybike.processor;
+package com.workflow2015.service.impl.processor;
 
 import com.workflow2015.common.helper.RouteRequest;
 import com.workflow2015.common.citybike.CityBikeStation;

@@ -1,4 +1,4 @@
-package com.workflow2015.service.impl.logger;
+package com.workflow2015.service.impl.processor;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
