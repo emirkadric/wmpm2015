@@ -16,17 +16,17 @@ import org.springframework.stereotype.Component;
 public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuilder {
 
     @Autowired
-    private RouteRequestValidatorProcessor routeRequestValidatorProcessor;
+    private RouteRequestValidatorProcessor routeRequestValidator;
     @Override
     public void configure() throws Exception {
 
         from("restlet:http://localhost:" + 49081 + "/routerequest?restletMethod=post")
                 .wireTap("activemq:queue:log")
                 .choice()
-                    .when(simple("${body} != null")) //content based router + message filter
+                    .when(simple("${body} != null")) //message filter
                         .unmarshal().json(JsonLibrary.Gson, RouteRequest.class)
                             .doTry()
-                                .process(routeRequestValidatorProcessor)
+                                .process(routeRequestValidator)
                                 .to("activemq:queue:requests")
                             .doCatch(ValidationException.class)
                                 .transform().simple("${exception.message}")

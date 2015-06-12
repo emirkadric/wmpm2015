@@ -6,7 +6,7 @@ import com.workflow2015.service.impl.aggregator.CityBikeStationAggregationStrate
 import com.workflow2015.service.impl.processor.CityBikeStationFilter;
 import com.workflow2015.service.impl.processor.CityBikeStationJsonParser;
 import com.workflow2015.service.impl.processor.DirectionsProcessor;
-import com.workflow2015.service.impl.processor.RequestLogger;
+import com.workflow2015.service.impl.processor.AddLineBreakProcessor;
 import com.workflow2015.service.impl.processor.OpenWeatherMapService;
 import com.workflow2015.service.impl.processor.WienerLinienService;
 import org.apache.camel.Exchange;
@@ -31,16 +31,19 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
     @Autowired
     private DirectionsProcessor directionsProcessor;
     @Autowired
-    private RequestLogger requestLogger;
+    private AddLineBreakProcessor addLineBreakProcessor;
 
 
     @Override
     public void configure() throws Exception {
 
-        //Errorhandeling
-        from("activemq:topic:error")
-                .setHeader(Exchange.FILE_NAME, constant("log.txt"))
-                .to("file:etc/log?fileExist=Append");
+        //Log all incoming requests with timestamp
+        from("activemq:queue:log")
+                .setHeader(Exchange.FILE_NAME, constant("requests.txt"))
+                .transform().simple("${in.header.org.restlet.startTime}: ${body}")
+                .process(addLineBreakProcessor)
+                .to("file://log?fileExist=Append")
+                .end();
 
         //Fetch Weather data
         from("activemq:topic:routerequest.openweathermap").
@@ -52,17 +55,9 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
         //Fetch Citybikes
         from("activemq:topic:routerequest.citybike")
                 .enrich("restlet:http://api.citybik.es/citybike-wien.json",
-                        new CityBikeStationAggregationStrategy())
+                        new CityBikeStationAggregationStrategy()) //needed to store the original request
                 .process(cityBikeStationJsonParser)
                 .process(cityBikeStationFilter)
-                .end();
-
-        //Additional logging
-        from("activemq:queue:log")
-                .setHeader(Exchange.FILE_NAME, constant("requests.txt"))
-                .transform().simple("${in.header.org.restlet.startTime}: ${body}")
-                .process(requestLogger)
-                .to("file://log?fileExist=Append")
                 .end();
 
         //Fetch Directions of maps-api
