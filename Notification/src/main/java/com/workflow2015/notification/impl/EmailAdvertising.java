@@ -1,5 +1,7 @@
 package com.workflow2015.notification.impl;
 
+import com.workflow2015.database.model.IUser;
+import com.workflow2015.database.model.User;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -27,8 +29,9 @@ public class EmailAdvertising implements Processor {
         System.out.println("+++Email advertising processor!+++");
 
         Map<String, Object> emailHeader = new HashMap<String, Object>();
+        IUser o = exchange.getIn().getBody(User.class);
 
-        emailHeader.put("To","wmpm2015@mailinator.com");
+        emailHeader.put("To", "wmpm2015@mailinator.com");
         emailHeader.put("Subject","Weekly Email offer just for YOU!");
 
         exchange.getIn().setHeaders(emailHeader);

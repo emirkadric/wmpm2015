@@ -1,6 +1,6 @@
 #FileLock
-#Wed Jun 10 00:36:32 CEST 2015
-hostName=emirk-PC
-id=14dda77be3d5fd5ac078362c1e7dd36165082caf4ca
+#Wed Jun 10 13:06:23 CEST 2015
+hostName=128.130.241.100
+id=14ddd2641025dcf54f7268000f8d023115a7f7c388e
 method=file
-server=10.10.9.135\:9092
+server=128.130.241.100\:9092
