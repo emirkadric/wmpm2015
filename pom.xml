@@ -145,6 +145,42 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.github.rmannibucau</groupId>
+                <artifactId>diagram-generator-maven-plugin</artifactId>
+                <version>0.0.1</version>
+                <executions>
+                    <execution>
+                        <id>pack</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <input>Service/src/main/java</input>
+                    <view>true</view>
+                    <width>320</width>
+                    <height>400</height>
+                    <output>target/diagram</output>
+                    <type>camel</type>
+                    <fileType>java</fileType>
+                    <format>png</format>
+                    <adjust>true</adjust>
+                    <additionalClasspathElements>
+                        <additionalClasspathElement>target/classes</additionalClasspathElement>
+                    </additionalClasspathElements>
+                </configuration>
+                <dependencies>
+                    <dependency> <!-- to use camel generator -->
+                        <groupId>com.github.rmannibucau</groupId>
+                        <artifactId>camel-loader</artifactId>
+                        <version>0.0.1</version>
+                    </dependency>
+                    <!-- route dependencies if needed -->
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
 </project>
