@@ -41,7 +41,9 @@ public class NotificationRouteBuilder extends RouteBuilder {
         from("activemq:topic:subscribers")
                 .routeId("email adverts").log("+++++++++++++Email advertising started!+++++++++++++")
                 .process(emailAdvertising)
-                .to("smtps://smtp.gmail.com:465?username=workflowss2015@gmail.com&password=workflow")
+                .to("velocity:file:Notification//src//main//resources//emailTemplate.vm")
+                .to("smtps://smtp.gmail.com:465?username=workflowss2015@gmail.com&password=workflow").log("Sending of email finished.")
                 .end();
+
     }
 }

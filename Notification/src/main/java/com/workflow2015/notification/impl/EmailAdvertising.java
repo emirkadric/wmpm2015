@@ -31,11 +31,10 @@ public class EmailAdvertising implements Processor {
         Map<String, Object> emailHeader = new HashMap<String, Object>();
         IUser o = exchange.getIn().getBody(User.class);
 
-        emailHeader.put("To", "wmpm2015@mailinator.com");
-        emailHeader.put("Subject","Weekly Email offer just for YOU!");
+        emailHeader.put("To", o.getEmail());
+        emailHeader.put("Subject", "Weekly Email offer just for YOU!");
 
         exchange.getIn().setHeaders(emailHeader);
-        exchange.getIn().setBody("Hello dear friends!");
 
     }
 }
