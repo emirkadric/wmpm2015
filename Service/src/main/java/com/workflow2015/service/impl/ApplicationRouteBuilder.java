@@ -3,10 +3,12 @@ package com.workflow2015.service.impl;
 import com.workflow2015.common.DecisionMaker;
 import com.workflow2015.common.helper.RouteRequest;
 import com.workflow2015.service.impl.processor.RouteRequestValidatorProcessor;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.ValidationException;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.aggregate.GroupedExchangeAggregationStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.JmsException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,6 +21,13 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
     private RouteRequestValidatorProcessor routeRequestValidator;
     @Override
     public void configure() throws Exception {
+
+        errorHandler(defaultErrorHandler()
+                .maximumRedeliveries(1)
+                .redeliveryDelay(1000)
+                .retryAttemptedLogLevel(
+                        LoggingLevel.WARN));
+
 
         from("restlet:http://localhost:" + 49081 + "/routerequest?restletMethod=post")
                 .wireTap("activemq:queue:log")
@@ -35,7 +44,9 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
 
         from("activemq:queue:requests")
                 .multicast(new GroupedExchangeAggregationStrategy())
+                .stopOnException()
                 .parallelProcessing()
+                .timeout(2000)
                 .to("activemq:topic:routerequest.openweathermap",
                         "activemq:topic:routerequest.wienerlinien",
                         "activemq:topic:routerequest.citybike",
