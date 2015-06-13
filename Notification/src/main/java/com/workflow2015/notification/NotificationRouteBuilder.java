@@ -24,11 +24,12 @@ public class NotificationRouteBuilder extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        from("timer:tmr?period=300000s")
+        from("activemq:topic:disruption")
                 .routeId("twitterROUTEid").log("*************Twitter***************")
-                .process(twitterNotification)
-                .to(twitterEndpoint)
-                .log("--------Finished posting on Twitter ------- ")
+                .doTry()
+                    .process(twitterNotification)
+                    .to(twitterEndpoint)
+                .doCatch(Exception.class).to("activemq:twitterErrors")
                 .end();
 
         from("jpa://User?consumer.query=select o from User o where o.subscribed=true&consumeDelete=false&consumer.delay=604800000")

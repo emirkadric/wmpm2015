@@ -1,5 +1,6 @@
 package com.workflow2015.notification.impl;
 
+import com.workflow2015.common.wlnews.Poi;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -15,22 +16,32 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 public class TwitterNotification implements Processor {
     private final CamelContext camelContext;
-    private static AtomicInteger counter = new AtomicInteger((int) (Math.random() * 100));
 
     @Autowired
     public TwitterNotification(CamelContext camelContext) {
         this.camelContext = camelContext;
-
     }
 
     @Override
     public void process(Exchange exchange) throws Exception {
         System.out.println("Usli smo u twitter processor! ");
 
-        String tweet = "MR3 preps!" + counter.getAndIncrement();
+        Poi disruption = exchange.getIn().getBody(Poi.class);
+        String tweet = disruption.getAttributes().getLocation().toString()+"\nStatus: "
+                        +disruption.getAttributes().getStatus().toString()+"\nFrom: "
+                        +disruption.getAttributes().getAusVon().toString()+"\nTo: "
+                        +disruption.getAttributes().getAusBis().toString();
+
+        checkTweet(tweet); //140 char limit by twitter
 
         exchange.getOut().setBody(tweet);
 
-
+    }
+    private String checkTweet(String tweet)
+    {
+        if(tweet.length() >= 140)
+            return tweet.substring(0, 140);
+        else
+            return tweet;
     }
 }

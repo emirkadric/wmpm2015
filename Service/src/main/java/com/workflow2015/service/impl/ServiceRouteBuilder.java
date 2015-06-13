@@ -2,13 +2,9 @@ package com.workflow2015.service.impl;
 
 import com.workflow2015.common.openweathermap.OpenWeather;
 import com.workflow2015.common.wienerlinien.Wienerlinien;
+import com.workflow2015.common.wlnews.WLnews;
 import com.workflow2015.service.impl.aggregator.CityBikeStationAggregationStrategy;
-import com.workflow2015.service.impl.processor.CityBikeStationFilter;
-import com.workflow2015.service.impl.processor.CityBikeStationJsonParser;
-import com.workflow2015.service.impl.processor.DirectionsProcessor;
-import com.workflow2015.service.impl.processor.AddLineBreakProcessor;
-import com.workflow2015.service.impl.processor.OpenWeatherMapService;
-import com.workflow2015.service.impl.processor.WienerLinienService;
+import com.workflow2015.service.impl.processor.*;
 import org.apache.camel.Exchange;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +29,10 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
     private DirectionsProcessor directionsProcessor;
     @Autowired
     private AddLineBreakProcessor addLineBreakProcessor;
+    @Autowired
+    private WienerLinienNews wienerLinienNews;
+    @Autowired
+    private WienerLinienNewsFilter wienerLinienNewsFilter;
 
 
     @Override
@@ -74,14 +74,13 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                 .unmarshal().json(JsonLibrary.Gson, Wienerlinien.class)
                 .end();
 
-       /* from("activemq:topic:requestprocessing.wienerlinien").process(new Processor() {
-            @Override
-            public void process(Exchange exchange) throws Exception {
-                /*Wienerlinien test = exchange.getIn().getBody(Wienerlinien.class);
-                exchange.getOut().setHeader("wienerlinien", "location");
-                exchange.getOut().setBody(exchange.getIn().getBody(String.class));
-            }
-        }).to("jpa:User");*/
+        from("timer:disruptionTimer?period=86400s")
+                .process(wienerLinienNews)
+                .recipientList(header("newslisturi"))
+                .unmarshal().json(JsonLibrary.Gson, WLnews.class)
+                .process(wienerLinienNewsFilter)
+                .to("activemq:topic:disruption")
+                .end();
 
     }
 }
