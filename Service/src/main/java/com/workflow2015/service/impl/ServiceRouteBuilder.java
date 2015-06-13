@@ -72,10 +72,7 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                 process(wienerLinienService)
                 .recipientList(header("wienerlinienuri"))
                 .unmarshal().json(JsonLibrary.Gson, Wienerlinien.class)
-<<<<<<< HEAD
                 .end();
-=======
-                .to("activemq:topic:requestprocessing.wienerlinien");
 
        /* from("activemq:topic:requestprocessing.wienerlinien").process(new Processor() {
             @Override
@@ -85,7 +82,6 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                 exchange.getOut().setBody(exchange.getIn().getBody(String.class));
             }
         }).to("jpa:User");*/
->>>>>>> feature/emailAdvertising
 
     }
 }
