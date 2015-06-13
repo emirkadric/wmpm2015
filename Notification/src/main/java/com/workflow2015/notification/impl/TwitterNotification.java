@@ -27,7 +27,7 @@ public class TwitterNotification implements Processor {
     public void process(Exchange exchange) throws Exception {
         System.out.println("Usli smo u twitter processor! ");
 
-        String tweet = "Hello/Hallo/Pozdrav WMPM 2015 IR1 " + counter.getAndIncrement();
+        String tweet = "MR3 preps!" + counter.getAndIncrement();
 
         exchange.getOut().setBody(tweet);
 

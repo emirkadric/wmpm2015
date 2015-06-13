@@ -14,6 +14,7 @@ import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 /**
  * Created by Dominik Heigl on 5/11/15.
  */
@@ -71,7 +72,20 @@ public class ServiceRouteBuilder extends org.apache.camel.builder.RouteBuilder {
                 process(wienerLinienService)
                 .recipientList(header("wienerlinienuri"))
                 .unmarshal().json(JsonLibrary.Gson, Wienerlinien.class)
+<<<<<<< HEAD
                 .end();
+=======
+                .to("activemq:topic:requestprocessing.wienerlinien");
+
+       /* from("activemq:topic:requestprocessing.wienerlinien").process(new Processor() {
+            @Override
+            public void process(Exchange exchange) throws Exception {
+                /*Wienerlinien test = exchange.getIn().getBody(Wienerlinien.class);
+                exchange.getOut().setHeader("wienerlinien", "location");
+                exchange.getOut().setBody(exchange.getIn().getBody(String.class));
+            }
+        }).to("jpa:User");*/
+>>>>>>> feature/emailAdvertising
 
     }
 }
