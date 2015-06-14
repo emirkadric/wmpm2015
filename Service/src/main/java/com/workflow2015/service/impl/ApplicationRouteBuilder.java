@@ -46,7 +46,7 @@ public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuild
                 .multicast(new GroupedExchangeAggregationStrategy())
                 .stopOnException()
                 .parallelProcessing()
-                .timeout(2000)
+                .timeout(5000)
                 .to("activemq:topic:routerequest.openweathermap",
                         "activemq:topic:routerequest.wienerlinien",
                         "activemq:topic:routerequest.citybike",
