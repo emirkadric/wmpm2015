@@ -1,6 +1,7 @@
 package com.workflow2015.common.helper;
 
 import com.google.gson.annotations.Expose;
+import com.sun.istack.NotNull;
 
 import javax.annotation.Generated;
 import java.io.Serializable;
@@ -9,8 +10,10 @@ import java.io.Serializable;
 public class To implements Serializable {
 
     @Expose
+    @NotNull
     private Double latitude;
     @Expose
+    @NotNull
     private Double longitude;
 
     /**

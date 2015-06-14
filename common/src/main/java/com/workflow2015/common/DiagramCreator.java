@@ -16,12 +16,12 @@ public class DiagramCreator
         mojo.setFileType("java");
         mojo.setType("camel");
         mojo.setFormat("png");
-        mojo.setHeight(480);
-        mojo.setWidth(640);
+        mojo.setHeight(1200);
+        mojo.setWidth(800);
         mojo.setView(false);
         mojo.setAdjust(true);
         mojo.setOutput(new File("/Users/kumar/Desktop/"));
-        mojo.setInput("com.workflow2015.common");
+        mojo.setInput("com.workflow2015.service");
         System.setProperty("java.awt.headless", "false");
         mojo.execute();
     }

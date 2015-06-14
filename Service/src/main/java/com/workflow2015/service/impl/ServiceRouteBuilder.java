@@ -2,13 +2,13 @@ package com.workflow2015.service.impl;
 
 import com.workflow2015.common.openweathermap.OpenWeather;
 import com.workflow2015.common.wienerlinien.Wienerlinien;
-import com.workflow2015.service.aggregator.CityBikeStationAggregationStrategy;
-import com.workflow2015.service.impl.citybike.processor.CityBikeStationFilter;
-import com.workflow2015.service.impl.citybike.processor.CityBikeStationJsonParser;
-import com.workflow2015.service.impl.directions.DirectionsProcessor;
-import com.workflow2015.service.impl.logger.RequestLogger;
-import com.workflow2015.service.impl.openweathermap.OpenWeatherMapService;
-import com.workflow2015.service.impl.wienerlinien.WienerLinienService;
+import com.workflow2015.service.impl.aggregator.CityBikeStationAggregationStrategy;
+import com.workflow2015.service.impl.processor.CityBikeStationFilter;
+import com.workflow2015.service.impl.processor.CityBikeStationJsonParser;
+import com.workflow2015.service.impl.processor.DirectionsProcessor;
+import com.workflow2015.service.impl.processor.AddLineBreakProcessor;
+import com.workflow2015.service.impl.processor.OpenWeatherMapService;
+import com.workflow2015.service.impl.processor.WienerLinienService;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
@@ -32,17 +32,20 @@ public class ServiceRouteBuilder extends RouteBuilder {
     @Autowired
     private DirectionsProcessor directionsProcessor;
     @Autowired
-    private RequestLogger requestLogger;
+    private AddLineBreakProcessor addLineBreakProcessor;
 
 
 
     @Override
     public void configure() throws Exception {
 
-        //Errorhandeling
-        from("activemq:topic:error")
-                .setHeader(Exchange.FILE_NAME, constant("log.txt"))
-                .to("file:etc/log?fileExist=Append");
+        //Log all incoming requests with timestamp
+        from("activemq:queue:log")
+                .setHeader(Exchange.FILE_NAME, constant("requests.txt"))
+                .transform().simple("${in.header.org.restlet.startTime}: ${body}")
+                .process(addLineBreakProcessor)
+                .to("file://log?fileExist=Append")
+                .end();
 
         //Fetch Weather data
         from("activemq:topic:routerequest.openweathermap").
@@ -54,17 +57,9 @@ public class ServiceRouteBuilder extends RouteBuilder {
         //Fetch Citybikes
         from("activemq:topic:routerequest.citybike")
                 .enrich("restlet:http://api.citybik.es/citybike-wien.json",
-                        new CityBikeStationAggregationStrategy())
+                        new CityBikeStationAggregationStrategy()) //needed to store the original request
                 .process(cityBikeStationJsonParser)
                 .process(cityBikeStationFilter)
-                .end();
-
-        //Additional logging
-        from("activemq:queue:log")
-                .setHeader(Exchange.FILE_NAME, constant("requests.txt"))
-                .transform().simple("${in.header.org.restlet.startTime}: ${body}")
-                .process(requestLogger)
-                .to("file://log?fileExist=Append")
                 .end();
 
         //Fetch Directions of maps-api
@@ -80,6 +75,14 @@ public class ServiceRouteBuilder extends RouteBuilder {
                 .unmarshal().json(JsonLibrary.Gson, Wienerlinien.class)
                 .end();
 
+       /* from("activemq:topic:requestprocessing.wienerlinien").process(new Processor() {
+            @Override
+            public void process(Exchange exchange) throws Exception {
+                /*Wienerlinien test = exchange.getIn().getBody(Wienerlinien.class);
+                exchange.getOut().setHeader("wienerlinien", "location");
+                exchange.getOut().setBody(exchange.getIn().getBody(String.class));
+            }
+        }).to("jpa:User");*/
 
     }
 }

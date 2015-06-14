@@ -1,4 +1,4 @@
-package com.workflow2015.service.impl.openweathermap;
+package com.workflow2015.service.impl.processor;
 
 import com.workflow2015.common.helper.RouteRequest;
 import org.apache.camel.CamelContext;
