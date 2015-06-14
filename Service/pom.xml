@@ -29,7 +29,12 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-http</artifactId>
         </dependency>
+
         <!-- add dependencies to other modules if you need it-->
     </dependencies>
+    <build>
+        <plugins>
+        </plugins>
+    </build>
 
 </project>

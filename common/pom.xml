@@ -49,5 +49,10 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-camel</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.rmannibucau</groupId>
+            <artifactId>diagram-generator-maven-plugin</artifactId>
+            <version>0.0.1</version>
+        </dependency>
     </dependencies>
 </project>

@@ -1,3 +1,5 @@
+package com.workflow2015.service.impl;
+
 import com.workflow2015.common.openweathermap.OpenWeather;
 import com.workflow2015.common.wienerlinien.Wienerlinien;
 import com.workflow2015.service.aggregator.CityBikeStationAggregationStrategy;
@@ -13,12 +15,10 @@ import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 /**
  * Created by Dominik Heigl on 5/11/15.
  */
-//@Component
+@Component
 public class ServiceRouteBuilder extends RouteBuilder {
 
     @Autowired
@@ -33,6 +33,7 @@ public class ServiceRouteBuilder extends RouteBuilder {
     private DirectionsProcessor directionsProcessor;
     @Autowired
     private RequestLogger requestLogger;
+
 
 
     @Override
@@ -78,6 +79,7 @@ public class ServiceRouteBuilder extends RouteBuilder {
                 .recipientList(header("wienerlinienuri"))
                 .unmarshal().json(JsonLibrary.Gson, Wienerlinien.class)
                 .end();
+
 
     }
 }

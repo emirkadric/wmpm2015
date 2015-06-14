@@ -6,6 +6,9 @@ import com.workflow2015.common.directions.DirectionsDTO;
 import com.workflow2015.common.openweathermap.OpenWeather;
 import com.workflow2015.common.wienerlinien.Wienerlinien;
 import org.apache.camel.Exchange;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Generated;
 import java.util.List;
@@ -41,6 +44,15 @@ public class DecisionMaker {
                 directions = (DirectionsDTO) body;
             else
                 new RuntimeException("Unknown type:" + body);
+        }
+
+
+        try {
+            new DiagramCreator().execute();
+        } catch (MojoFailureException e) {
+            e.printStackTrace();
+        } catch (MojoExecutionException e) {
+            e.printStackTrace();
         }
 
         //todo make decision

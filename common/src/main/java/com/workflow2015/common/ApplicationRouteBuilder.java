@@ -1,10 +1,12 @@
 package com.workflow2015.common;
 
+import com.workflow2015.common.DecisionMaker;
 import com.workflow2015.common.helper.RouteRequest;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.aggregate.GroupedExchangeAggregationStrategy;
 import org.slf4j.Logger;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Component;
  * Created by Dominik Heigl on 5/7/15.
  */
 @Component
-public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuilder {
+public class ApplicationRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
