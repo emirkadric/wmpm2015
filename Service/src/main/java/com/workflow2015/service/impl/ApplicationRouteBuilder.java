@@ -1,15 +1,14 @@
-package com.workflow2015.common;
+package com.workflow2015.service.impl;
 
+import com.workflow2015.common.DecisionMaker;
 import com.workflow2015.common.helper.RouteRequest;
-import org.apache.camel.Exchange;
-import org.apache.camel.ExchangePattern;
-import org.apache.camel.Processor;
-import org.apache.camel.ProducerTemplate;
+import com.workflow2015.service.impl.processor.RouteRequestValidatorProcessor;
+import org.apache.camel.LoggingLevel;
+import org.apache.camel.ValidationException;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.aggregate.GroupedExchangeAggregationStrategy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.JmsException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,31 +17,36 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationRouteBuilder extends org.apache.camel.builder.RouteBuilder {
 
-    private static final Logger log = LoggerFactory.getLogger(ApplicationRouteBuilder.class);
-
+    @Autowired
+    private RouteRequestValidatorProcessor routeRequestValidator;
     @Override
     public void configure() throws Exception {
+
+        errorHandler(defaultErrorHandler()
+                .maximumRedeliveries(1)
+                .redeliveryDelay(1000)
+                .retryAttemptedLogLevel(
+                        LoggingLevel.WARN));
+
+
         from("restlet:http://localhost:" + 49081 + "/routerequest?restletMethod=post")
                 .wireTap("activemq:queue:log")
                 .choice()
-                    .when(simple("${body} != null")) //content based router + message filter
+                    .when(simple("${body} != null")) //message filter
                         .unmarshal().json(JsonLibrary.Gson, RouteRequest.class)
-                        .choice()
-                            .when(simple("${body.time} != null && ${body.from} != null " +
-                                    "&& ${body.from.latitude} != null && ${body.from.longitude} != null " +
-                                    "&& ${body.to} != null && ${body.to.longitude} != null && ${body.to.latitude} != null")) //todo add all parameter
+                            .doTry()
+                                .process(routeRequestValidator)
                                 .to("activemq:queue:requests")
-                    .otherwise()
-                        .transform().simple("Request not valid")
-                .endChoice()
-                .otherwise()
-                    .transform().simple("Request empty")
+                            .doCatch(ValidationException.class)
+                                .transform().simple("${exception.message}")
+                    .endChoice()
                 .end();
-
 
         from("activemq:queue:requests")
                 .multicast(new GroupedExchangeAggregationStrategy())
+                .stopOnException()
                 .parallelProcessing()
+                .timeout(2000)
                 .to("activemq:topic:routerequest.openweathermap",
                         "activemq:topic:routerequest.wienerlinien",
                         "activemq:topic:routerequest.citybike",

@@ -1,4 +1,4 @@
-package com.workflow2015.service.impl.logger;
+package com.workflow2015.service.impl.processor;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -11,7 +11,7 @@ import java.util.Date;
  * Created by kumar on 10/06/15.
  */
 @Component
-public class RequestLogger implements Processor {
+public class AddLineBreakProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {

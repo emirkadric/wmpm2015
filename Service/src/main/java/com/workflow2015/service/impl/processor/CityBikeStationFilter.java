@@ -1,4 +1,4 @@
-package com.workflow2015.service.impl.citybike.processor;
+package com.workflow2015.service.impl.processor;
 
 import com.workflow2015.common.helper.RouteRequest;
 import com.workflow2015.common.citybike.CityBikeStation;
@@ -19,7 +19,7 @@ public class CityBikeStationFilter implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        //todo filter data
+
         RouteRequest rootRequest = exchange.getProperty("rootRequest", RouteRequest.class);
         CityBikeStations stations = exchange.getIn().getBody(CityBikeStations.class);
         CityBikeStation closest = stations.getClosestBikeStation(rootRequest.getFrom().getLongitude(),

@@ -1,4 +1,4 @@
-package com.workflow2015.service.impl.citybike.processor;
+package com.workflow2015.service.impl.processor;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
