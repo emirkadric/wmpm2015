@@ -32,7 +32,7 @@ public class DatabaseRoutBuilder extends RouteBuilder {
                         user.setFirstname(line.get(0).trim());
                         user.setLastname(line.get(1).trim());
                         user.setEmail(line.get(2).trim());
-                        user.setSubscribed(Boolean.getBoolean(line.get(3).trim()));
+                        user.setSubscribed(Boolean.parseBoolean(line.get(3).trim()));
                         users.add(user);
                     }
                     exchange.getIn().setBody(users, List.class);
