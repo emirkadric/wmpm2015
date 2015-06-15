@@ -24,7 +24,7 @@ public class TwitterNotification implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        System.out.println("Usli smo u twitter processor! ");
+        System.out.println("Twitter processor started! ");
 
         Poi disruption = exchange.getIn().getBody(Poi.class);
         String tweet = disruption.getAttributes().getLocation().toString()+"\nStatus: "

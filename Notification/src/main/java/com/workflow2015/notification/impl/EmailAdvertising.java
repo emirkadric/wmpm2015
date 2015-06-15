@@ -20,7 +20,7 @@ public class EmailAdvertising implements Processor {
     private final CamelContext camelContext;
 
     @Autowired
-    public EmailAdvertising(CamelContext camelContext){
+    public EmailAdvertising(CamelContext camelContext) {
         this.camelContext = camelContext;
     }
 
@@ -28,11 +28,12 @@ public class EmailAdvertising implements Processor {
     public void process(Exchange exchange) throws Exception {
         System.out.println("+++Email advertising processor!+++");
 
-        Map<String, Object> emailHeader = new HashMap<String, Object>();
+        Map<String, Object> emailHeader = new HashMap<>();
         IUser o = exchange.getIn().getBody(User.class);
 
         emailHeader.put("To", o.getEmail());
         emailHeader.put("Subject", "Weekly Email offer just for YOU!");
+        emailHeader.put("Content-Type", "text/html");
 
         exchange.getIn().setHeaders(emailHeader);
 
